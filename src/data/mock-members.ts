@@ -1,0 +1,108 @@
+import type { Member } from "@/lib/types";
+
+export const mockMembers: Member[] = [
+  // 연구원 (current)
+  {
+    id: "member-1",
+    name: "이순형",
+    isLabHead: true,
+    role: "석박 통합 과정",
+    affiliation: "동국대학교 경영대학 경영정보학과",
+    email: "leesunhyoung0226@gmail.com",
+    status: "current",
+  },
+  {
+    id: "member-2",
+    name: "표아진",
+    role: "박사 과정",
+    affiliation: "동국대학교 경영대학 경영정보학과",
+    email: "ajpyo@dongguk.edu",
+    status: "current",
+  },
+  {
+    id: "member-3",
+    name: "김민균",
+    role: "석사 과정",
+    affiliation: "동국대학교 경영대학 경영정보학과",
+    email: "rlaalsrbs1111@gmail.com",
+    status: "current",
+  },
+  {
+    id: "member-4",
+    name: "김혜선",
+    role: "석사과정 (파트)",
+    affiliation: "비즈니스 애널리틱스전공",
+    email: "yoju2732@naver.com",
+    status: "current",
+  },
+  {
+    id: "member-5",
+    name: "김경빈",
+    role: "학부연구생",
+    affiliation: "한국기술교육대학교 산업경영학부 데이터경영전공",
+    email: "englandgirl@koreatech.ac.kr",
+    status: "current",
+  },
+  {
+    id: "member-6",
+    name: "안태영",
+    role: "학부연구생",
+    affiliation: "동국대학교 경영정보학, 데이터사이언스 연계 전공",
+    email: "kunn16@naver.com",
+    status: "current",
+  },
+  {
+    id: "member-7",
+    name: "조민선",
+    role: "학부연구생",
+    affiliation: "동국대학교 경영정보학과, 인공지능학과",
+    status: "current",
+  },
+
+  // 졸업자 (alumni)
+  {
+    id: "member-8",
+    name: "황진규",
+    role: "졸업자",
+    affiliation: "산업경영학부",
+    email: "realgyu1110@koreatech.ac.kr",
+    status: "alumni",
+  },
+  {
+    id: "member-9",
+    name: "김희정",
+    role: "졸업자",
+    affiliation: "산업경영학부",
+    status: "alumni",
+  },
+  {
+    id: "member-10",
+    name: "김수빈",
+    role: "졸업자",
+    affiliation: "산업경영학부",
+    status: "alumni",
+  },
+  {
+    id: "member-11",
+    name: "박예실",
+    role: "연구원",
+    affiliation: "산업경영학부",
+    status: "alumni",
+  },
+  {
+    id: "member-12",
+    name: "박상진",
+    role: "학부연구생",
+    affiliation: "산업경영학부",
+    email: "psj3119@naver.com",
+    status: "alumni",
+  },
+  {
+    id: "member-13",
+    name: "김동하",
+    role: "학부연구생",
+    affiliation: "산업경영학부",
+    email: "gimdongha@koreatech.ac.kr",
+    status: "alumni",
+  },
+];

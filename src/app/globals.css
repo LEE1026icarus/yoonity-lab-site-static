@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #faf9f5;
+  --paper-raised: #ffffff;
+  --ink: #111114;
+  --ink-muted: #5b5b63;
+  --hairline: #e6e4de;
+
+  --axis-ai: #6d5ef5;
+  --axis-genai: #ff6b4a;
+  --axis-quantum: #00a99a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0b0b0e;
+    --paper-raised: #131318;
+    --ink: #f5f4f0;
+    --ink-muted: #a3a3ac;
+    --hairline: #232329;
+
+    --axis-ai: #9186ff;
+    --axis-genai: #ff8a70;
+    --axis-quantum: #2fd9c8;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-hairline: var(--hairline);
+
+  --color-axis-ai: var(--axis-ai);
+  --color-axis-genai: var(--axis-genai);
+  --color-axis-quantum: var(--axis-quantum);
+
+  --font-sans: var(--font-pretendard), "Pretendard Variable", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  border-color: var(--hairline);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--hairline) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

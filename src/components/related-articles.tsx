@@ -1,0 +1,57 @@
+import { getArticles } from "@/lib/sheets";
+import { ScrollReveal } from "./scroll-reveal";
+
+const ACCENT_CLASSES = {
+  ai: "from-axis-ai/30 text-axis-ai",
+  genai: "from-axis-genai/30 text-axis-genai",
+  quantum: "from-axis-quantum/30 text-axis-quantum",
+} as const;
+
+export async function RelatedArticles() {
+  const articles = await getArticles();
+
+  return (
+    <section id="articles" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <ScrollReveal>
+        <h2 className="text-3xl font-black tracking-tight md:text-4xl">
+          관련 기사
+        </h2>
+      </ScrollReveal>
+
+      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {articles.map((article, i) => (
+          <ScrollReveal key={article.id} delay={0.06 + (i % 3) * 0.08}>
+            <a
+              href={article.href}
+              className="group block h-full overflow-hidden rounded-2xl border border-hairline bg-paper-raised transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
+            >
+              <div
+                className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${ACCENT_CLASSES[article.accent]} to-transparent`}
+              >
+                <div
+                  className="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(currentColor 1px, transparent 1px)",
+                    backgroundSize: "18px 18px",
+                  }}
+                />
+              </div>
+              <div className="p-6">
+                <time className="text-xs font-medium text-ink-muted">
+                  {article.date}
+                </time>
+                <h3 className="mt-2 line-clamp-2 text-base font-bold leading-snug">
+                  {article.title}
+                </h3>
+                <p className="mt-2 line-clamp-2 text-sm text-ink-muted">
+                  {article.excerpt}
+                </p>
+              </div>
+            </a>
+          </ScrollReveal>
+        ))}
+      </div>
+    </section>
+  );
+}
