@@ -59,6 +59,7 @@ export type Publication = {
   title: string;
   meta?: string;
   href?: string;
+  authors?: string[];
 };
 
 export type MemberStatus = "current" | "alumni";
@@ -71,4 +72,7 @@ export type Member = {
   affiliation: string;
   email?: string;
   status: MemberStatus;
+  photo?: string;
+  researchField?: string[];
+  period?: string;
 };

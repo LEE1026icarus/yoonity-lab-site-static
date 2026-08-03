@@ -10,6 +10,8 @@ export const mockMembers: Member[] = [
     affiliation: "동국대학교 경영대학 경영정보학과",
     email: "leesunhyoung0226@gmail.com",
     status: "current",
+    period: "23.03-",
+    researchField: ["생성형 AI", "챗봇", "교육공학"],
   },
   {
     id: "member-2",
@@ -18,6 +20,8 @@ export const mockMembers: Member[] = [
     affiliation: "동국대학교 경영대학 경영정보학과",
     email: "ajpyo@dongguk.edu",
     status: "current",
+    period: "22.09-",
+    researchField: ["노동경제", "정책분석"],
   },
   {
     id: "member-3",
@@ -26,6 +30,7 @@ export const mockMembers: Member[] = [
     affiliation: "동국대학교 경영대학 경영정보학과",
     email: "rlaalsrbs1111@gmail.com",
     status: "current",
+    period: "24.03-",
   },
   {
     id: "member-4",

@@ -69,6 +69,20 @@ const domesticPapers: string[] = [
   "윤상혁 (2014). 시청자의 온라인 리뷰를 활용한 TV프로그램의 정성적 가치측정. 석사학위논문, 한국과학기술원.",
 ];
 
+// Sparse index -> lab-member author names, keyed to intlPapers/domesticPapers above.
+// Configure via the "authors" column on the publications sheet in production.
+const intlPaperAuthors: Record<number, string[]> = {
+  1: ["이순형"],
+};
+
+const domesticPaperAuthors: Record<number, string[]> = {
+  3: ["이순형"],
+  5: ["이순형"],
+  6: ["김민균"],
+  7: ["표아진"],
+  13: ["이순형"],
+};
+
 const books: { title: string; publisher: string; authors: string; date: string }[] = [
   {
     title: "경영혁신을 위한 생성형 AI 이해와 활용",
@@ -123,11 +137,13 @@ export const mockPublications: Publication[] = [
     id: `intl-${i}`,
     category: "intl-paper" as const,
     title: citation,
+    authors: intlPaperAuthors[i],
   })),
   ...domesticPapers.map((citation, i) => ({
     id: `domestic-${i}`,
     category: "domestic-paper" as const,
     title: citation,
+    authors: domesticPaperAuthors[i],
   })),
   ...books.map((book, i) => ({
     id: `book-${i}`,

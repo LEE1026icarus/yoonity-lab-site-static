@@ -81,10 +81,6 @@ export async function getActivities(): Promise<Activity[]> {
 
 export async function getPublications(): Promise<Publication[]> {
   const rows = await fetchSheetRows("publications");
-  console.log("[getPublications] rows.length:", rows.length);
-  if (rows.length > 0) {
-    console.log("[getPublications] First row:", rows[0]);
-  }
   if (rows.length === 0) return mockPublications;
   return rows.map((r) => ({
     id: r.id,
@@ -92,6 +88,9 @@ export async function getPublications(): Promise<Publication[]> {
     title: r.title,
     meta: r.meta || undefined,
     href: r.href || undefined,
+    authors: r.authors
+      ? r.authors.split(";").map((s) => s.trim()).filter(Boolean)
+      : undefined,
   }));
 }
 
@@ -106,6 +105,11 @@ export async function getMembers(): Promise<Member[]> {
     affiliation: r.affiliation,
     email: r.email || undefined,
     status: r.status as Member["status"],
+    photo: r.photo || undefined,
+    researchField: r.researchField
+      ? r.researchField.split(";").filter(Boolean)
+      : undefined,
+    period: r.period || undefined,
   }));
 }
 
