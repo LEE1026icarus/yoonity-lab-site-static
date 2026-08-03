@@ -4,6 +4,26 @@ import { useState } from "react";
 import Image from "next/image";
 import type { Member, Publication } from "@/lib/types";
 
+function formatPeriod(period: string): string {
+  if (!period) return "";
+  // Handle already formatted dates (e.g., "2023.05 – 현재")
+  if (period.includes("–") || period.includes("-–")) return period;
+  // Convert "23.05-" to "2023.05 – 현재"
+  if (period.endsWith("-")) {
+    const yearMonth = period.slice(0, -1);
+    const [year, month] = yearMonth.split(".");
+    return `20${year}.${month} – 현재`;
+  }
+  // Convert "22.09-24.12" to "2022.09 – 2024.12"
+  if (period.includes("-")) {
+    const [start, end] = period.split("-");
+    const [startYear, startMonth] = start.split(".");
+    const [endYear, endMonth] = end.split(".");
+    return `20${startYear}.${startMonth} – 20${endYear}.${endMonth}`;
+  }
+  return period;
+}
+
 const TABS = [
   { key: "current", label: "연구원" },
   { key: "alumni", label: "졸업자" },
@@ -70,18 +90,18 @@ export function MembersList({
               {/* Photo */}
               <div className="flex shrink-0 sm:flex-col sm:items-center">
                 {member.photo ? (
-                  <div className="h-24 w-24 overflow-hidden rounded-full ring-1 ring-axis-ai/20">
+                  <div className="h-32 w-32 overflow-hidden rounded-full ring-1 ring-axis-ai/20">
                     <Image
                       src={member.photo}
                       alt={member.name}
-                      width={96}
-                      height={96}
+                      width={128}
+                      height={128}
                       className="h-full w-full object-cover"
                     />
                   </div>
                 ) : (
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br text-[32px] font-black ring-1 ${AVATAR_CLASSES[color]}`}
+                    className={`flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br text-[40px] font-black ring-1 ${AVATAR_CLASSES[color]}`}
                   >
                     {member.name.slice(0, 1)}
                   </div>
@@ -90,26 +110,30 @@ export function MembersList({
 
               {/* Info */}
               <div className="min-w-0 flex-1 sm:border-r sm:border-hairline sm:pr-6">
-                <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[22px] font-bold">
-                  <span>
-                    {member.name}
-                    {member.isLabHead && (
-                      <span className="ml-1 text-[20px] font-medium text-ink-muted">
-                        (랩장)
-                      </span>
-                    )}
-                  </span>
-                  <span className="rounded-full border border-hairline px-2 py-0.5 text-[17px] font-medium text-ink-muted">
-                    {member.role}
-                  </span>
-                  {member.period && (
-                    <span className="text-[17px] font-medium text-ink-muted">
-                      ({member.period})
+                <p className="text-[22px] font-bold">
+                  {member.name}
+                  {member.isLabHead && (
+                    <span className="ml-2 text-[17px] font-medium text-ink-muted">
+                      랩장
                     </span>
                   )}
                 </p>
-                <p className="mt-1.5 text-[20px] text-ink-muted">
+                <p className="mt-1.5 text-[17px] text-ink-muted">
+                  {member.role}
+                  {member.period && (
+                    <>
+                      <span className="mx-1.5">·</span>
+                      {formatPeriod(member.period)}
+                    </>
+                  )}
+                </p>
+                <p className="mt-2 text-[17px] text-ink-muted">
                   {member.affiliation}
+                  {member.currentAffiliation && (
+                    <div className="mt-1 text-[16px]">
+                      현재: <span className="font-medium">{member.currentAffiliation}</span>
+                    </div>
+                  )}
                 </p>
 
                 {member.researchField && member.researchField.length > 0 && (

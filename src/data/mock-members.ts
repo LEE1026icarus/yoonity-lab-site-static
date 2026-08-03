@@ -12,6 +12,7 @@ export const mockMembers: Member[] = [
     status: "current",
     period: "23.03-",
     researchField: ["생성형 AI", "챗봇", "교육공학"],
+    photo: "/images/members/이순형.webp",
   },
   {
     id: "member-2",
@@ -22,6 +23,7 @@ export const mockMembers: Member[] = [
     status: "current",
     period: "22.09-",
     researchField: ["노동경제", "정책분석"],
+    photo: "/images/members/표아진.webp",
   },
   {
     id: "member-3",
@@ -31,6 +33,7 @@ export const mockMembers: Member[] = [
     email: "rlaalsrbs1111@gmail.com",
     status: "current",
     period: "24.03-",
+    photo: "/images/members/김민균.jpg",
   },
   {
     id: "member-4",
@@ -39,6 +42,7 @@ export const mockMembers: Member[] = [
     affiliation: "비즈니스 애널리틱스전공",
     email: "yoju2732@naver.com",
     status: "current",
+    photo: "/images/members/김혜선.png",
   },
   {
     id: "member-5",
@@ -47,6 +51,7 @@ export const mockMembers: Member[] = [
     affiliation: "한국기술교육대학교 산업경영학부 데이터경영전공",
     email: "englandgirl@koreatech.ac.kr",
     status: "current",
+    photo: "/images/members/김경빈.webp",
   },
   {
     id: "member-6",
@@ -62,6 +67,7 @@ export const mockMembers: Member[] = [
     role: "학부연구생",
     affiliation: "동국대학교 경영정보학과, 인공지능학과",
     status: "current",
+    photo: "/images/members/조민선.png",
   },
 
   // 졸업자 (alumni)
@@ -72,6 +78,8 @@ export const mockMembers: Member[] = [
     affiliation: "산업경영학부",
     email: "realgyu1110@koreatech.ac.kr",
     status: "alumni",
+    photo: "/images/members/황진규.webp",
+    currentAffiliation: "크몽",
   },
   {
     id: "member-9",
@@ -79,6 +87,7 @@ export const mockMembers: Member[] = [
     role: "졸업자",
     affiliation: "산업경영학부",
     status: "alumni",
+    photo: "/images/members/김희정.webp",
   },
   {
     id: "member-10",
@@ -86,6 +95,7 @@ export const mockMembers: Member[] = [
     role: "졸업자",
     affiliation: "산업경영학부",
     status: "alumni",
+    photo: "/images/members/김수빈.webp",
   },
   {
     id: "member-11",
@@ -93,6 +103,8 @@ export const mockMembers: Member[] = [
     role: "연구원",
     affiliation: "산업경영학부",
     status: "alumni",
+    photo: "/images/members/박예실.jpg",
+    currentAffiliation: "위세아이텍",
   },
   {
     id: "member-12",
@@ -101,6 +113,8 @@ export const mockMembers: Member[] = [
     affiliation: "산업경영학부",
     email: "psj3119@naver.com",
     status: "alumni",
+    photo: "/images/members/박상진.webp",
+    currentAffiliation: "번개장터",
   },
   {
     id: "member-13",
@@ -109,5 +123,6 @@ export const mockMembers: Member[] = [
     affiliation: "산업경영학부",
     email: "gimdongha@koreatech.ac.kr",
     status: "alumni",
+    photo: "/images/members/김동하.webp",
   },
 ];
