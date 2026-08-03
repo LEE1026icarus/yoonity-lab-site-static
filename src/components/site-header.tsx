@@ -4,17 +4,38 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDownIcon } from "lucide-react";
 
 const NAV_LINKS = [
   { label: "지도교수", href: "/professor" },
-  { label: "활동", href: "/activities" },
-  { label: "출판", href: "/publications" },
-  { label: "연구원", href: "/researchers" },
+  { label: "활동", href: "/activities", submenu: "activity" },
+  { label: "출판", href: "/publications", submenu: "publication" },
+  { label: "연구원", href: "/researchers", submenu: "researcher" },
+];
+
+const ACTIVITY_SUBMENU = [
+  { label: "연구과제", href: "/activities?category=project" },
+  { label: "수상내역", href: "/activities?category=award" },
+  { label: "학회수상", href: "/activities?category=academic-award" },
+  { label: "대외", href: "/activities?category=external" },
+];
+
+const PUBLICATION_SUBMENU = [
+  { label: "해외 논문", href: "/publications?category=intl-paper" },
+  { label: "국내 논문", href: "/publications?category=domestic-paper" },
+  { label: "도서", href: "/publications?category=book" },
+  { label: "특허", href: "/publications?category=patent" },
+];
+
+const RESEARCHER_SUBMENU = [
+  { label: "연구원", href: "/researchers?status=current" },
+  { label: "졸업자", href: "/researchers?status=alumni" },
 ];
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -51,13 +72,57 @@ export function SiteHeader() {
 
           <nav className="hidden items-center gap-8 text-sm text-ink-muted md:flex">
             {NAV_LINKS.map((link) => (
-              <Link
+              <div
                 key={link.label}
-                href={link.href}
-                className="transition-colors hover:text-ink"
+                className="relative"
+                onMouseEnter={() => link.submenu && setActiveSubmenu(link.submenu)}
+                onMouseLeave={() => link.submenu && setActiveSubmenu(null)}
               >
-                {link.label}
-              </Link>
+                <Link
+                  href={link.href}
+                  className="flex items-center gap-1 transition-colors hover:text-ink"
+                >
+                  {link.label}
+                  {link.submenu && (
+                    <ChevronDownIcon
+                      className={`size-4 transition-transform duration-200 ${
+                        activeSubmenu === link.submenu ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
+                </Link>
+
+                {link.submenu && (
+                  <AnimatePresence>
+                    {activeSubmenu === link.submenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-hairline bg-paper-raised shadow-lg"
+                      >
+                        <div className="flex flex-col gap-1 p-3">
+                          {(link.submenu === "activity"
+                            ? ACTIVITY_SUBMENU
+                            : link.submenu === "publication"
+                              ? PUBLICATION_SUBMENU
+                              : RESEARCHER_SUBMENU
+                          ).map((item) => (
+                            <Link
+                              key={item.label}
+                              href={item.href}
+                              className="rounded px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-ink"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
             ))}
             <Link
               href="/#research"
@@ -99,14 +164,53 @@ export function SiteHeader() {
           >
             <div className="flex flex-col gap-1 px-6 py-4">
               {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="py-2 text-sm text-ink-muted transition-colors hover:text-ink"
-                >
-                  {link.label}
-                </Link>
+                <div key={link.label}>
+                  {link.submenu ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setActiveSubmenu(
+                          activeSubmenu === link.submenu ? null : link.submenu
+                        )
+                      }
+                      className="flex w-full items-center justify-between py-2 text-sm text-ink-muted transition-colors hover:text-ink"
+                    >
+                      <span>{link.label}</span>
+                      <ChevronDownIcon
+                        className={`size-4 transition-transform duration-200 ${
+                          activeSubmenu === link.submenu ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      onClick={() => setMenuOpen(false)}
+                      className="block py-2 text-sm text-ink-muted transition-colors hover:text-ink"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
+                  {link.submenu && activeSubmenu === link.submenu && (
+                    <div className="flex flex-col gap-1 pl-4">
+                      {(link.submenu === "activity"
+                        ? ACTIVITY_SUBMENU
+                        : link.submenu === "publication"
+                          ? PUBLICATION_SUBMENU
+                          : RESEARCHER_SUBMENU
+                      ).map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setMenuOpen(false)}
+                          className="py-1.5 text-sm text-ink-muted transition-colors hover:text-ink"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
               <Link
                 href="/#research"

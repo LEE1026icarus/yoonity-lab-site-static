@@ -8,7 +8,7 @@ export const mockArticles: Article[] = [
     excerpt:
       "AI 교수님과 채팅, 영화와 동화책 제작, 팀 프로젝트로 학업성취도 향상",
     accent: "genai",
-    href: "#",
+    href: "https://www.koreatech.ac.kr/user/pageView/60",
   },
   {
     id: "data-fighter-2024",
