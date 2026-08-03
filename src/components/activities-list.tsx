@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { Activity, ActivityCategory } from "@/lib/types";
 
 const CATEGORIES: { key: ActivityCategory; label: string }[] = [
@@ -12,7 +12,25 @@ const CATEGORIES: { key: ActivityCategory; label: string }[] = [
 
 export function ActivitiesList({ activities }: { activities: Activity[] }) {
   const [active, setActive] = useState<ActivityCategory>("project");
+  const [minHeight, setMinHeight] = useState<number | null>(null);
+  const ulRef = useRef<HTMLUListElement>(null);
+  const heightsRef = useRef<Record<ActivityCategory, number>>({
+    project: 0,
+    award: 0,
+    "academic-award": 0,
+    external: 0,
+  });
+
   const filtered = activities.filter((activity) => activity.category === active);
+
+  useEffect(() => {
+    if (ulRef.current) {
+      const height = ulRef.current.scrollHeight;
+      heightsRef.current[active] = height;
+      const maxHeight = Math.max(...Object.values(heightsRef.current));
+      setMinHeight(maxHeight);
+    }
+  }, [active]);
 
   return (
     <div>
@@ -33,7 +51,11 @@ export function ActivitiesList({ activities }: { activities: Activity[] }) {
         ))}
       </div>
 
-      <ul className="mt-2 divide-y divide-hairline">
+      <ul
+        ref={ulRef}
+        className="mt-2 divide-y divide-hairline transition-all duration-300"
+        style={{ minHeight: minHeight ? `${minHeight}px` : undefined }}
+      >
         {filtered.map((activity) => (
           <li key={activity.id} className="py-5">
             <p className="text-[22px] font-bold">{activity.title}</p>
