@@ -17,7 +17,7 @@ async function getAccessToken(): Promise<string | null> {
   const key = await importPKCS8(privateKey, "RS256");
   const now = Math.floor(Date.now() / 1000);
   const assertion = await new SignJWT({
-    scope: "https://www.googleapis.com/auth/spreadsheets.readonly",
+    scope: "https://www.googleapis.com/auth/spreadsheets",
   })
     .setProtectedHeader({ alg: "RS256" })
     .setIssuer(email)
@@ -48,24 +48,41 @@ async function getAccessToken(): Promise<string | null> {
 // callers fall back to local mock data in that case.
 export async function fetchSheetRows(tab: string): Promise<Record<string, string>[]> {
   const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
-  if (!spreadsheetId) return [];
+  if (!spreadsheetId) {
+    console.log(`[fetchSheetRows] No GOOGLE_SHEETS_ID for tab: ${tab}`);
+    return [];
+  }
 
   const cached = cache.get(tab);
-  if (cached && cached.expires > Date.now()) return cached.rows;
+  if (cached && cached.expires > Date.now()) {
+    console.log(`[fetchSheetRows] Using cache for tab: ${tab}, rows: ${cached.rows.length}`);
+    return cached.rows;
+  }
 
   try {
     const token = await getAccessToken();
-    if (!token) return [];
+    if (!token) {
+      console.log(`[fetchSheetRows] Failed to get access token for tab: ${tab}`);
+      return [];
+    }
 
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`${tab}!A:Z`)}`;
+    console.log(`[fetchSheetRows] Fetching URL: ${url}`);
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.log(`[fetchSheetRows] API error for tab: ${tab}, status: ${res.status}`);
+      return [];
+    }
 
     const data = (await res.json()) as { values?: string[][] };
     const values = data.values ?? [];
-    if (values.length < 2) return [];
+    console.log(`[fetchSheetRows] Got ${values.length} rows for tab: ${tab}`);
+    if (values.length < 2) {
+      console.log(`[fetchSheetRows] Not enough rows (need header + data) for tab: ${tab}`);
+      return [];
+    }
 
     const [header, ...body] = values;
     const rows = body
@@ -78,9 +95,44 @@ export async function fetchSheetRows(tab: string): Promise<Record<string, string
         return obj;
       });
 
+    console.log(`[fetchSheetRows] Parsed ${rows.length} rows for tab: ${tab}`);
     cache.set(tab, { rows, expires: Date.now() + CACHE_TTL_MS });
     return rows;
-  } catch {
+  } catch (error) {
+    console.log(`[fetchSheetRows] Exception for tab: ${tab}:`, error);
     return [];
+  }
+}
+
+export async function updateSheetCell(
+  tab: string,
+  range: string,
+  value: string
+): Promise<boolean> {
+  const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
+  if (!spreadsheetId) return false;
+
+  try {
+    const token = await getAccessToken();
+    if (!token) return false;
+
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`${tab}!${range}`)}?valueInputOption=USER_ENTERED`;
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        values: [[value]],
+      }),
+    });
+
+    if (res.ok) {
+      cache.delete(tab);
+    }
+    return res.ok;
+  } catch {
+    return false;
   }
 }
