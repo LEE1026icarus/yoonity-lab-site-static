@@ -66,7 +66,9 @@ export async function fetchSheetRows(tab: string): Promise<Record<string, string
       return [];
     }
 
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`${tab}!A:Z`)}`;
+    const fields =
+      "sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link))))))";
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?includeGridData=true&ranges=${encodeURIComponent(`${tab}!A:Z`)}&fields=${encodeURIComponent(fields)}`;
     console.log(`[fetchSheetRows] Fetching URL: ${url}`);
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}` },
@@ -76,21 +78,35 @@ export async function fetchSheetRows(tab: string): Promise<Record<string, string
       return [];
     }
 
-    const data = (await res.json()) as { values?: string[][] };
-    const values = data.values ?? [];
-    console.log(`[fetchSheetRows] Got ${values.length} rows for tab: ${tab}`);
-    if (values.length < 2) {
+    type GridCell = {
+      formattedValue?: string;
+      hyperlink?: string;
+      textFormatRuns?: { format?: { link?: { uri?: string } } }[];
+    };
+    const data = (await res.json()) as {
+      sheets?: { data?: { rowData?: { values?: GridCell[] }[] }[] }[];
+    };
+    const rowData = data.sheets?.[0]?.data?.[0]?.rowData ?? [];
+    console.log(`[fetchSheetRows] Got ${rowData.length} rows for tab: ${tab}`);
+    if (rowData.length < 2) {
       console.log(`[fetchSheetRows] Not enough rows (need header + data) for tab: ${tab}`);
       return [];
     }
 
-    const [header, ...body] = values;
-    const rows = body
-      .filter((row) => row.some((cell) => cell))
+    const formattedValue = (cell: GridCell | undefined) => cell?.formattedValue || "";
+    const hyperlinkValue = (cell: GridCell | undefined) =>
+      cell?.hyperlink ||
+      cell?.textFormatRuns?.find((run) => run.format?.link?.uri)?.format?.link?.uri ||
+      formattedValue(cell);
+    const header = (rowData[0].values ?? []).map((cell) => cell.formattedValue ?? "");
+    const rows = rowData
+      .slice(1)
+      .map((row) => row.values ?? [])
+      .filter((row) => row.some((cell) => formattedValue(cell) || hyperlinkValue(cell)))
       .map((row) => {
         const obj: Record<string, string> = {};
         header.forEach((key, i) => {
-          obj[key] = row[i] ?? "";
+          obj[key] = key === "href" ? hyperlinkValue(row[i]) : formattedValue(row[i]);
         });
         return obj;
       });

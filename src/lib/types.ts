@@ -49,6 +49,7 @@ export type Activity = {
   org?: string;
   tag?: string;
   period: string;
+  href?: string;
 };
 
 export type PublicationCategory = "intl-paper" | "domestic-paper" | "book" | "patent";

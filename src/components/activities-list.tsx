@@ -58,7 +58,18 @@ export function ActivitiesList({ activities }: { activities: Activity[] }) {
       >
         {filtered.map((activity) => (
           <li key={activity.id} className="py-5">
-            <p className="text-[22px] font-bold">{activity.title}</p>
+            {activity.href ? (
+              <a
+                href={activity.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[22px] font-bold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
+              >
+                {activity.title}
+              </a>
+            ) : (
+              <p className="text-[22px] font-bold">{activity.title}</p>
+            )}
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[20px] text-ink-muted">
               {activity.org && <span>{activity.org}</span>}
               {activity.tag && (

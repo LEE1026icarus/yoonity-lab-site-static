@@ -77,6 +77,7 @@ export async function getActivities(): Promise<Activity[]> {
     org: r.org || undefined,
     tag: r.tag || undefined,
     period: r.period,
+    href: r.href || undefined,
   }));
 }
 
