@@ -23,6 +23,7 @@ export async function getArticles(): Promise<Article[]> {
     excerpt: r.excerpt,
     accent: (r.accent as Article["accent"]) || "ai",
     href: r.href || "#",
+    thumbnail: r.thumbnail || undefined,
   }));
 }
 
@@ -110,6 +111,7 @@ export async function getMembers(): Promise<Member[]> {
       ? r.researchField.split(";").filter(Boolean)
       : undefined,
     period: r.period || undefined,
+    currentAffiliation: r.currentAffiliation || undefined,
   }));
 }
 

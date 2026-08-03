@@ -3,9 +3,9 @@ export type Article = {
   date: string;
   title: string;
   excerpt: string;
-  /** No real photography yet — cards render a generated pattern tinted by this axis accent. */
   accent: "ai" | "genai" | "quantum";
   href: string;
+  thumbnail?: string;
 };
 
 export type ResearchAxis = {
@@ -75,4 +75,5 @@ export type Member = {
   photo?: string;
   researchField?: string[];
   period?: string;
+  currentAffiliation?: string;
 };

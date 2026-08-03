@@ -23,19 +23,31 @@ export async function RelatedArticles() {
           <ScrollReveal key={article.id} delay={0.06 + (i % 3) * 0.08}>
             <a
               href={article.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group block h-full overflow-hidden rounded-2xl border border-hairline bg-paper-raised transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
             >
               <div
-                className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${ACCENT_CLASSES[article.accent]} to-transparent`}
+                className={`relative aspect-[16/10] overflow-hidden ${
+                  article.thumbnail ? "" : `bg-gradient-to-br ${ACCENT_CLASSES[article.accent]} to-transparent`
+                }`}
               >
-                <div
-                  className="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(currentColor 1px, transparent 1px)",
-                    backgroundSize: "18px 18px",
-                  }}
-                />
+                {article.thumbnail ? (
+                  <img
+                    src={article.thumbnail}
+                    alt={article.title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(currentColor 1px, transparent 1px)",
+                      backgroundSize: "18px 18px",
+                    }}
+                  />
+                )}
               </div>
               <div className="p-6">
                 <time className="text-xs font-medium text-ink-muted">
