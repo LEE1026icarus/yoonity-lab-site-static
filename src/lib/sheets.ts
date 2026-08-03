@@ -11,7 +11,7 @@ import { professor as mockProfessor } from "@/data/mock-professor";
 import { mockActivities } from "@/data/mock-activities";
 import { mockPublications } from "@/data/mock-publications";
 import { mockMembers } from "@/data/mock-members";
-import { fetchSheetRows } from "./google-sheets-client";
+import { fetchSheetRows, updateSheetCell } from "./google-sheets-client";
 
 export async function getArticles(): Promise<Article[]> {
   const rows = await fetchSheetRows("articles");
@@ -81,6 +81,10 @@ export async function getActivities(): Promise<Activity[]> {
 
 export async function getPublications(): Promise<Publication[]> {
   const rows = await fetchSheetRows("publications");
+  console.log("[getPublications] rows.length:", rows.length);
+  if (rows.length > 0) {
+    console.log("[getPublications] First row:", rows[0]);
+  }
   if (rows.length === 0) return mockPublications;
   return rows.map((r) => ({
     id: r.id,
@@ -103,4 +107,19 @@ export async function getMembers(): Promise<Member[]> {
     email: r.email || undefined,
     status: r.status as Member["status"],
   }));
+}
+
+export async function updatePublicationHref(
+  publicationTitle: string,
+  href: string
+): Promise<boolean> {
+  const rows = await fetchSheetRows("publications");
+  if (rows.length === 0) return false;
+
+  const rowIndex = rows.findIndex((r) => r.title === publicationTitle);
+  if (rowIndex === -1) return false;
+
+  const rowNum = rowIndex + 2;
+  const success = await updateSheetCell("publications", `F${rowNum}`, href);
+  return success;
 }
