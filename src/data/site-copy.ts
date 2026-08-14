@@ -6,8 +6,8 @@ export const siteCopy = {
       "현장의 문제에서 출발해 AI와 데이터로 해결책을 설계하고 검증합니다. 그리고 다음 기술 전환까지 함께 준비합니다.",
   },
   home: {
-    primaryCta: "협업 논의하기",
-    secondaryCta: "연구 참여 알아보기",
+    primaryCta: "기업·기관 협업 문의",
+    secondaryCta: "대학원·학부연구생 지원 안내",
     collaborationLabel: "Industry–Academia Collaboration",
     collaborationTitle: "함께 풀어야 할 문제가 있다면, 연구의 시작이 됩니다.",
     collaborationDescription:
