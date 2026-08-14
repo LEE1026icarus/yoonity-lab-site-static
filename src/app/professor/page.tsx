@@ -18,12 +18,6 @@ export default async function ProfessorPage() {
       <main className="mx-auto max-w-4xl flex-1 px-6 py-32">
       <ScrollReveal>
         <p className="text-[20px] font-semibold text-ink-muted">지도교수</p>
-        <h1 className="mt-3 text-[42px] font-black leading-tight tracking-tight md:text-[54px]">
-          산업 경험과 학술 연구를 연결합니다
-        </h1>
-        <p className="mt-4 max-w-3xl text-[18px] leading-relaxed text-ink-muted">
-          서비스 기획과 데이터 사이언스 실무 경험을 바탕으로, 현장의 문제를 검증 가능한 연구와 해결책으로 발전시킵니다.
-        </p>
 
         <div className="mt-8 flex flex-col items-center text-center">
           {p.photo ? (
@@ -41,7 +35,7 @@ export default async function ProfessorPage() {
               {p.name.slice(0, 1)}
             </div>
           )}
-          <h2 className="mt-6 text-[54px] font-black tracking-tight">{p.name}</h2>
+          <h1 className="mt-6 text-[54px] font-black tracking-tight">{p.name}</h1>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[20px] text-ink-muted">
             <a

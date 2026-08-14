@@ -37,7 +37,8 @@ test("shared pages use one collaboration-first message and contact", async () =>
   assert.match(layout, /산업 문제 해결형 AI 연구실/);
   assert.match(about, /siteCopy\.brand\.headline/);
   assert.match(about, /siteCopy\.home\.meetingCta/);
-  assert.match(header, /산학협력/);
+  assert.match(header, /연구실 소개/);
+  assert.doesNotMatch(header, /산학협력/);
   assert.match(footer, /siteCopy\.contact\.collaborationEmail/);
   assert.doesNotMatch(footer, /koreatechbigdatalab@gmail\.com/);
 });
@@ -65,15 +66,19 @@ test("existing records are framed as credibility evidence", async () => {
       readFile(researchersPath, "utf8"),
     ]);
   assert.match(articles, /연구와 현장을 연결한 기록/);
-  assert.match(professor, /산업 경험과 학술 연구를 연결합니다/);
+  assert.doesNotMatch(professor, /산업 경험과 학술 연구를 연결합니다/);
+  assert.doesNotMatch(professor, /서비스 기획과 데이터 사이언스 실무 경험을 바탕으로/);
   assert.match(activities, /현장의 문제를 과제와 성과로/);
   assert.match(publications, /검증한 질문과 축적한 지식/);
+  assert.doesNotMatch(publications, /AI, 디지털 서비스와 조직의 의사결정을 연구한/);
   assert.match(researchers, /실제 문제를 함께 연구하는 사람들/);
 });
 
 test("home leads with collaboration and keeps recruitment secondary", async () => {
   const home = await readFile(homePath, "utf8");
-  assert.match(home, /siteCopy\.brand\.headline/);
+  assert.match(home, /AI를 넘어/);
+  assert.match(home, /양자가 여는 다음 가능성/);
+  assert.match(home, /복잡한 산업의 의사결정 문제를 풀어냅니다/);
   assert.match(home, /siteCopy\.home\.primaryCta/);
   assert.match(home, /siteCopy\.home\.secondaryCta/);
   assert.match(home, /siteCopy\.home\.collaborationTitle/);
