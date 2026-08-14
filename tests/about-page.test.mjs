@@ -5,6 +5,7 @@ import test from "node:test";
 const typesPath = new URL("../src/lib/types.ts", import.meta.url);
 const sheetsPath = new URL("../src/lib/sheets.ts", import.meta.url);
 const mockPath = new URL("../src/data/mock-about.ts", import.meta.url);
+const newsPath = new URL("../src/components/about-news.tsx", import.meta.url);
 
 test("about data has typed sheet sources and local fallbacks", async () => {
   const [types, sheets, mock] = await Promise.all([
@@ -34,4 +35,14 @@ test("about data has typed sheet sources and local fallbacks", async () => {
   assert.match(sheets, /filter\(\(resource\) => resource\.id && resource\.title && resource\.href\)/);
   assert.match(sheets, /filter\(\(item\) => item\.id && item\.date && item\.title && item\.href\)/);
   assert.match(mock, /yoonity25@gmail\.com/);
+});
+
+test("about news starts with three items and expands accessibly", async () => {
+  const news = await readFile(newsPath, "utf8");
+  assert.match(news, /^"use client"/);
+  assert.match(news, /slice\(0, 3\)/);
+  assert.match(news, /aria-expanded=\{expanded\}/);
+  assert.match(news, /전체 기사 보기/);
+  assert.match(news, /기사 접기/);
+  assert.match(news, /noopener noreferrer/);
 });
