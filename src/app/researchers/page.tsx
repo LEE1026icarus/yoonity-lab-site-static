@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Yoonity 연구실 연구원 및 졸업자",
 };
 
+export const revalidate = 60;
+
 export default async function ResearchersPage() {
   const [members, publications] = await Promise.all([
     getMembers(),

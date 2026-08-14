@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Yoonity 연구실의 해외/국내 논문, 도서, 특허",
 };
 
+export const revalidate = 60;
+
 export default async function PublicationsPage() {
   const publications = await getPublications();
 

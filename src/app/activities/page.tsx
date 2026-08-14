@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Yoonity 연구실의 연구 과제, 수상내역, 학회수상, 대외 활동",
 };
 
+export const revalidate = 60;
+
 export default async function ActivitiesPage() {
   const activities = await getActivities();
 

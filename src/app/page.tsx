@@ -5,6 +5,8 @@ import { RelatedArticles } from "@/components/related-articles";
 import { SiteFooter } from "@/components/site-footer";
 import { siteCopy } from "@/data/site-copy";
 
+export const revalidate = 60;
+
 export default function Home() {
   const collaborationHref = `mailto:${siteCopy.contact.collaborationEmail}`;
 

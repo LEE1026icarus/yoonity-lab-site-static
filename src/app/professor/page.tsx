@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "Yoonity 연구실 지도교수 소개",
 };
 
+export const revalidate = 60;
+
 export default async function ProfessorPage() {
   const p = await getProfessor();
 
