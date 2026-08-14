@@ -51,6 +51,7 @@ test("capabilities support one problem-led research process", async () => {
   assert.match(axesComponent, /세 가지 역량, 하나의 문제 해결 방식/);
   assert.match(axesComponent, /문제에 맞는 기술을 선택합니다/);
   assert.match(processComponent, /문제를 정의하고, 설계하고, 검증합니다/);
+  assert.match(processComponent, /flex flex-col gap-8 md:flex-row md:gap-12/);
   assert.match(axesData, /미래 적용 가능성과 조직의 준비 조건/);
 });
 

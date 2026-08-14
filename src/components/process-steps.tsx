@@ -35,14 +35,14 @@ export function ProcessSteps() {
 
           return (
             <ScrollReveal key={step.id} delay={0.1 + idx * 0.1}>
-              <div className="relative -ml-[41px] flex gap-8 md:gap-12">
+              <div className="relative -ml-[41px] flex flex-col gap-8 md:flex-row md:gap-12">
                 {/* Dot */}
                 <div
                   className={`absolute -left-5 top-2 h-3.5 w-3.5 rounded-full ${dotColor}`}
                 />
 
                 {/* Left: Number & Title */}
-                <div className="min-w-fit pt-1">
+                <div className="w-full pt-1 md:w-auto md:min-w-fit">
                   <div className={`text-5xl md:text-6xl font-black ${colors}`}>
                     {step.number}
                   </div>
@@ -55,7 +55,7 @@ export function ProcessSteps() {
                 </div>
 
                 {/* Right: Items */}
-                <div className="flex-1 space-y-6 pt-2">
+                <div className="min-w-0 flex-1 space-y-6 pt-2">
                   {step.items.map((item, itemIdx) => (
                     <div key={itemIdx} className="pb-6 last:pb-0">
                       <div
