@@ -18,13 +18,13 @@ export function ProcessSteps() {
     <section id="process" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <ScrollReveal>
         <p className="text-sm font-semibold text-ink-muted">
-          연구 방법론
+          Yoonity Research Process
         </p>
         <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight tracking-tight md:text-4xl">
-          문제에서 기술까지, 세 단계의 연구 프로세스
+          문제를 정의하고, 설계하고, 검증합니다
         </h2>
         <p className="mt-4 max-w-4xl text-ink-muted">
-          현장 문제에서 출발하여 설계·검증을 거쳐 다음 기술을 준비하는 체계적인 연구 방법론입니다.
+          기업과 기관의 현장 맥락을 연구 가능한 질문으로 바꾸고, 해결책을 설계한 뒤 실제 데이터와 사용자 환경에서 가치를 확인합니다.
         </p>
       </ScrollReveal>
 

@@ -25,13 +25,13 @@ export function ResearchAxes() {
     <section id="research" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <ScrollReveal>
         <p className="text-sm font-semibold text-ink-muted">
-          세 개의 축, 하나의 질문
+          세 가지 역량, 하나의 문제 해결 방식
         </p>
         <h2 className="mt-3 max-w-2xl text-3xl font-black leading-tight tracking-tight md:text-4xl">
-          기술이 조직의 의사결정을 어떻게 바꾸는가
+          문제에 맞는 기술을 선택합니다
         </h2>
         <p className="mt-4 max-w-4xl text-ink-muted">
-          AI에서 양자에 이르기까지, 경영정보학의 렌즈로 기술과 조직, 데이터와 전략이 만나는 지점을 탐구합니다.
+          Yoonity는 기술을 먼저 정하지 않습니다. 조직이 내려야 할 결정과 검증해야 할 가설을 정의한 뒤, AI·생성형 AI·Quantum-AI 중 적합한 접근을 설계합니다.
         </p>
       </ScrollReveal>
 
