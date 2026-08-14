@@ -48,7 +48,10 @@ Core hero and section copy stays in code because it changes infrequently and ben
 | `key` | Setting identifier |
 | `value` | Setting value |
 
-Initial setting: `collaboration_email = yoonity25@gmail.com`.
+Initial settings:
+
+- `collaboration_email = yoonity25@gmail.com`
+- `recruitment_href = https://www.notion.so/Yoonity-27f8edb3cd7280a19b16d907d41e4bfb?source=copy_link`
 
 #### `about_resources`
 
