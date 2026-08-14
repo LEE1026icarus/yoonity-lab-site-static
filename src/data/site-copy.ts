@@ -13,7 +13,6 @@ export const siteCopy = {
     collaborationDescription:
       "공동연구, 산학과제, AI 파일럿과 실증, 데이터 분석과 자문까지. 문제와 현재 상황을 알려주시면 가능한 연구 방향을 함께 검토합니다.",
     emailCta: "협업 문의 이메일 보내기",
-    meetingCta: "미팅 요청하기",
   },
   audiences: {
     collaboration: "기업·기관 협업",
@@ -21,6 +20,5 @@ export const siteCopy = {
   },
   contact: {
     collaborationEmail: "yoonity25@gmail.com",
-    meetingSubject: "Yoonity Lab 산학협력 미팅 요청",
   },
 } as const;

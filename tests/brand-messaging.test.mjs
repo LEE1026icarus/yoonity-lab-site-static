@@ -39,7 +39,8 @@ test("shared pages use one collaboration-first message and contact", async () =>
   ]);
   assert.match(layout, /산업 문제 해결형 AI 연구실/);
   assert.match(about, /siteCopy\.brand\.headline/);
-  assert.match(about, /siteCopy\.home\.meetingCta/);
+  assert.match(about, /siteCopy\.home\.emailCta/);
+  assert.doesNotMatch(about, /siteCopy\.home\.meetingCta/);
   assert.match(header, /연구실 소개/);
   assert.doesNotMatch(header, /산학협력/);
   assert.match(footer, /siteCopy\.contact\.collaborationEmail/);
@@ -68,7 +69,9 @@ test("existing records are framed as credibility evidence", async () => {
       readFile(publicationsPath, "utf8"),
       readFile(researchersPath, "utf8"),
     ]);
-  assert.match(articles, /연구와 현장을 연결한 기록/);
+  assert.match(articles, /최근 연구와 협업 소식/);
+  assert.match(articles, /articles\.slice\(0, 3\)/);
+  assert.match(articles, /href="\/about#news"/);
   assert.doesNotMatch(professor, /산업 경험과 학술 연구를 연결합니다/);
   assert.doesNotMatch(professor, /서비스 기획과 데이터 사이언스 실무 경험을 바탕으로/);
   assert.match(activities, /현장의 문제를 과제와 성과로/);
@@ -85,6 +88,7 @@ test("home leads with collaboration and keeps recruitment secondary", async () =
   assert.match(home, /siteCopy\.home\.primaryCta/);
   assert.match(home, /siteCopy\.home\.secondaryCta/);
   assert.match(home, /siteCopy\.home\.collaborationTitle/);
-  assert.match(home, /encodeURIComponent\(siteCopy\.contact\.meetingSubject\)/);
+  assert.doesNotMatch(home, /siteCopy\.home\.meetingCta/);
+  assert.doesNotMatch(home, /siteCopy\.contact\.meetingSubject/);
   assert.ok(home.indexOf("primaryCta") < home.indexOf("secondaryCta"));
 });

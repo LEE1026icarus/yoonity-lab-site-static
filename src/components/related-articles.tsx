@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getArticles } from "@/lib/sheets";
 import { ScrollReveal } from "./scroll-reveal";
 
@@ -9,20 +10,21 @@ const ACCENT_CLASSES = {
 
 export async function RelatedArticles() {
   const articles = await getArticles();
+  const featuredArticles = articles.slice(0, 3);
 
   return (
     <section id="articles" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <ScrollReveal>
         <h2 className="text-3xl font-black tracking-tight md:text-4xl">
-          연구와 현장을 연결한 기록
+          최근 연구와 협업 소식
         </h2>
         <p className="mt-4 max-w-2xl text-ink-muted">
-          Yoonity의 연구, 프로젝트와 구성원이 산업과 교육 현장에서 만든 변화를 소개합니다.
+          연구와 프로젝트가 산업과 교육 현장에서 만든 주요 결과를 소개합니다.
         </p>
       </ScrollReveal>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article, i) => (
+        {featuredArticles.map((article, i) => (
           <ScrollReveal key={article.id} delay={0.06 + (i % 3) * 0.08}>
             <a
               href={article.href}
@@ -69,6 +71,15 @@ export async function RelatedArticles() {
           </ScrollReveal>
         ))}
       </div>
+
+      <ScrollReveal delay={0.12}>
+        <Link
+          href="/about#news"
+          className="mt-10 inline-flex rounded-full border border-hairline px-5 py-3 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+        >
+          전체 소식 보기 →
+        </Link>
+      </ScrollReveal>
     </section>
   );
 }

@@ -7,7 +7,6 @@ import { siteCopy } from "@/data/site-copy";
 
 export default function Home() {
   const collaborationHref = `mailto:${siteCopy.contact.collaborationEmail}`;
-  const meetingHref = `mailto:${siteCopy.contact.collaborationEmail}?subject=${encodeURIComponent(siteCopy.contact.meetingSubject)}`;
 
   return (
     <>
@@ -65,12 +64,6 @@ export default function Home() {
                 className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
               >
                 {siteCopy.home.emailCta}
-              </a>
-              <a
-                href={meetingHref}
-                className="rounded-full border border-hairline px-5 py-3 text-sm font-semibold transition-colors hover:bg-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
-              >
-                {siteCopy.home.meetingCta}
               </a>
               <Link
                 href="/about#collaboration"

@@ -15,7 +15,6 @@ const sectionClass = "border-t border-hairline py-20 md:py-24";
 
 export default async function AboutPage() {
   const data = await getAboutPageData();
-  const meetingHref = `mailto:${data.collaborationEmail}?subject=${encodeURIComponent(siteCopy.contact.meetingSubject)}`;
 
   return (
     <>
@@ -91,12 +90,6 @@ export default async function AboutPage() {
               >
                 {siteCopy.home.emailCta}
               </a>
-              <a
-                href={meetingHref}
-                className="inline-flex rounded-full border border-hairline px-5 py-3 text-sm font-semibold transition-colors hover:bg-paper-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
-              >
-                {siteCopy.home.meetingCta}
-              </a>
             </div>
           </section>
         </ScrollReveal>
@@ -133,7 +126,7 @@ export default async function AboutPage() {
         </ScrollReveal>
 
         <ScrollReveal>
-          <section className={sectionClass}>
+          <section id="news" className={sectionClass}>
             <p className="text-sm font-semibold text-ink-muted">News</p>
             <h2 className="mt-3 text-3xl font-black tracking-tight">연구실 소식</h2>
             <div className="mt-8">

@@ -63,6 +63,19 @@ test("about page renders the agreed sections in order", async () => {
   assert.match(page, /<SiteFooter/);
 });
 
+test("about page exposes a news anchor for the home page", async () => {
+  const page = await readFile(pagePath, "utf8");
+
+  assert.match(page, /<section id="news"/);
+});
+
+test("about collaboration offers email contact without a meeting request action", async () => {
+  const page = await readFile(pagePath, "utf8");
+
+  assert.match(page, /mailto:\$\{data\.collaborationEmail\}/);
+  assert.doesNotMatch(page, /siteCopy\.home\.meetingCta/);
+});
+
 test("header navigation reaches the about page", async () => {
   const header = await readFile(headerPath, "utf8");
   assert.equal((header.match(/href="\/about"/g) ?? []).length, 2);
