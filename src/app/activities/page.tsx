@@ -18,8 +18,11 @@ export default async function ActivitiesPage() {
         <ScrollReveal>
           <p className="text-[20px] font-semibold text-ink-muted">활동</p>
           <h1 className="mt-3 text-[54px] font-black tracking-tight">
-            연구 과제부터 수상까지
+            현장의 문제를 과제와 성과로
           </h1>
+          <p className="mt-4 max-w-3xl text-[18px] leading-relaxed text-ink-muted">
+            기업·기관과 함께 수행한 연구 과제와 구성원들이 만든 수상 성과를 확인하세요.
+          </p>
         </ScrollReveal>
 
         <ScrollReveal delay={0.08} className="mt-12">

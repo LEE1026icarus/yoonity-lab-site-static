@@ -14,8 +14,11 @@ export async function RelatedArticles() {
     <section id="articles" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <ScrollReveal>
         <h2 className="text-3xl font-black tracking-tight md:text-4xl">
-          관련 기사
+          연구와 현장을 연결한 기록
         </h2>
+        <p className="mt-4 max-w-2xl text-ink-muted">
+          Yoonity의 연구, 프로젝트와 구성원이 산업과 교육 현장에서 만든 변화를 소개합니다.
+        </p>
       </ScrollReveal>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -33,6 +36,8 @@ export async function RelatedArticles() {
                 }`}
               >
                 {article.thumbnail ? (
+                  // External Sheet-managed image URLs are intentionally rendered as-is.
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={article.thumbnail}
                     alt={article.title}

@@ -18,8 +18,11 @@ export default async function PublicationsPage() {
         <ScrollReveal>
           <p className="text-[20px] font-semibold text-ink-muted">출판</p>
           <h1 className="mt-3 text-[54px] font-black tracking-tight">
-            연구로 남긴 기록들
+            검증한 질문과 축적한 지식
           </h1>
+          <p className="mt-4 max-w-3xl text-[18px] leading-relaxed text-ink-muted">
+            AI, 디지털 서비스와 조직의 의사결정을 연구한 논문·도서·특허를 모았습니다.
+          </p>
         </ScrollReveal>
 
         <ScrollReveal delay={0.08} className="mt-12">

@@ -27,8 +27,11 @@ export default async function ResearchersPage() {
         <ScrollReveal>
           <p className="text-[20px] font-semibold text-ink-muted">연구원</p>
           <h1 className="mt-3 text-[54px] font-black tracking-tight">
-            하나의 팀, 무한한 가능성
+            실제 문제를 함께 연구하는 사람들
           </h1>
+          <p className="mt-4 max-w-3xl text-[18px] leading-relaxed text-ink-muted">
+            서로 다른 관심과 경험을 연결해 산업과 사회의 문제를 연구 성과로 발전시킵니다.
+          </p>
         </ScrollReveal>
 
         <ScrollReveal delay={0.08} className="mt-12">
