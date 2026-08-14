@@ -65,7 +65,7 @@ test("about page renders the agreed sections in order", async () => {
 
 test("header navigation reaches the about page", async () => {
   const header = await readFile(headerPath, "utf8");
-  assert.equal((header.match(/href="\/about"/g) ?? []).length, 2);
+  assert.equal((header.match(/href="\/about#collaboration"/g) ?? []).length, 2);
   assert.doesNotMatch(header, /href="\/#research"/);
 });
 

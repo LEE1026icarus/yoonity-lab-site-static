@@ -12,6 +12,10 @@ const professorPath = new URL("../src/app/professor/page.tsx", import.meta.url);
 const activitiesPath = new URL("../src/app/activities/page.tsx", import.meta.url);
 const publicationsPath = new URL("../src/app/publications/page.tsx", import.meta.url);
 const researchersPath = new URL("../src/app/researchers/page.tsx", import.meta.url);
+const layoutPath = new URL("../src/app/layout.tsx", import.meta.url);
+const aboutPath = new URL("../src/app/about/page.tsx", import.meta.url);
+const headerPath = new URL("../src/components/site-header.tsx", import.meta.url);
+const footerPath = new URL("../src/components/site-footer.tsx", import.meta.url);
 
 test("site copy preserves the approved positioning and audience priority", async () => {
   const copy = await readFile(copyPath, "utf8");
@@ -21,6 +25,21 @@ test("site copy preserves the approved positioning and audience priority", async
   assert.match(copy, /연구 참여 알아보기/);
   assert.match(copy, /yoonity25@gmail\.com/);
   assert.ok(copy.indexOf("협업 논의하기") < copy.indexOf("연구 참여 알아보기"));
+});
+
+test("shared pages use one collaboration-first message and contact", async () => {
+  const [layout, about, header, footer] = await Promise.all([
+    readFile(layoutPath, "utf8"),
+    readFile(aboutPath, "utf8"),
+    readFile(headerPath, "utf8"),
+    readFile(footerPath, "utf8"),
+  ]);
+  assert.match(layout, /산업 문제 해결형 AI 연구실/);
+  assert.match(about, /siteCopy\.brand\.headline/);
+  assert.match(about, /siteCopy\.home\.meetingCta/);
+  assert.match(header, /산학협력/);
+  assert.match(footer, /siteCopy\.contact\.collaborationEmail/);
+  assert.doesNotMatch(footer, /koreatechbigdatalab@gmail\.com/);
 });
 
 test("capabilities support one problem-led research process", async () => {

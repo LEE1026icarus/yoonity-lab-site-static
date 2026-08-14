@@ -125,10 +125,10 @@ export function SiteHeader() {
               </div>
             ))}
             <Link
-              href="/about"
+              href="/about#collaboration"
               className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper transition-opacity hover:opacity-80"
             >
-              연구실 살펴보기
+              산학협력
             </Link>
           </nav>
 
@@ -213,11 +213,11 @@ export function SiteHeader() {
                 </div>
               ))}
               <Link
-                href="/about"
+                href="/about#collaboration"
                 onClick={() => setMenuOpen(false)}
                 className="mt-2 w-fit rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper"
               >
-                연구실 살펴보기
+                산학협력
               </Link>
             </div>
           </motion.nav>

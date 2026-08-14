@@ -1,3 +1,5 @@
+import { siteCopy } from "@/data/site-copy";
+
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -9,11 +11,12 @@ export function SiteFooter() {
           <p className="mt-1">동국대학교 경영정보학과 Yoonity 연구실</p>
         </div>
         <div className="flex flex-col gap-1 md:items-end">
+          <p>산학협력 및 연구 문의</p>
           <a
-            href="mailto:koreatechbigdatalab@gmail.com"
+            href={`mailto:${siteCopy.contact.collaborationEmail}`}
             className="transition-colors hover:text-ink"
           >
-            koreatechbigdatalab@gmail.com
+            {siteCopy.contact.collaborationEmail}
           </a>
           <p>&copy; {year} Yoonity Lab. All rights reserved.</p>
         </div>

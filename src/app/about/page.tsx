@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AboutNews } from "@/components/about-news";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { siteCopy } from "@/data/site-copy";
 import { getAboutPageData } from "@/lib/sheets";
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ const sectionClass = "border-t border-hairline py-20 md:py-24";
 
 export default async function AboutPage() {
   const data = await getAboutPageData();
+  const meetingHref = `mailto:${data.collaborationEmail}?subject=${encodeURIComponent(siteCopy.contact.meetingSubject)}`;
 
   return (
     <>
@@ -22,10 +24,10 @@ export default async function AboutPage() {
           <section>
             <p className="text-sm font-semibold text-ink-muted">연구실 소개</p>
             <h1 className="mt-4 max-w-3xl text-4xl font-black leading-tight tracking-tight md:text-6xl">
-              기술과 조직을 연결해, 더 나은 의사결정을 연구합니다.
+              {siteCopy.brand.headline}
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
-              Yoonity는 AI와 데이터, 미래 기술이 산업과 조직에서 실제 가치를 만드는 조건을 연구합니다.
+              {siteCopy.brand.description}
             </p>
           </section>
         </ScrollReveal>
@@ -45,7 +47,7 @@ export default async function AboutPage() {
               rel="noopener noreferrer"
               className="mt-8 inline-flex rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
             >
-              모집 공고 보기
+              {siteCopy.home.secondaryCta}
             </a>
           </section>
         </ScrollReveal>
@@ -82,12 +84,20 @@ export default async function AboutPage() {
             <p className="mt-4 max-w-2xl leading-relaxed text-ink-muted">
               기업·기관과의 공동연구, 산학과제, AI 파일럿, 데이터 분석과 자문을 논의합니다. 문제와 현재 상황을 알려주세요.
             </p>
-            <a
-              href={`mailto:${data.collaborationEmail}`}
-              className="mt-8 inline-flex rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
-            >
-              협업 문의하기
-            </a>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={`mailto:${data.collaborationEmail}`}
+                className="inline-flex rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+              >
+                {siteCopy.home.emailCta}
+              </a>
+              <a
+                href={meetingHref}
+                className="inline-flex rounded-full border border-hairline px-5 py-3 text-sm font-semibold transition-colors hover:bg-paper-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+              >
+                {siteCopy.home.meetingCta}
+              </a>
+            </div>
           </section>
         </ScrollReveal>
 
