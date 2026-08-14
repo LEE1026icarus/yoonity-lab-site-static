@@ -11,6 +11,8 @@ export const metadata: Metadata = {
     "Yoonity 연구실의 연구, 대학원생 모집, 산학협력, 자료와 소식을 소개합니다.",
 };
 
+export const revalidate = 60;
+
 const sectionClass = "border-t border-hairline py-20 md:py-24";
 
 export default async function AboutPage() {
