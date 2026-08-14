@@ -78,3 +78,36 @@ export type Member = {
   period?: string;
   currentAffiliation?: string;
 };
+
+export type AboutResource = {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  order: number;
+};
+
+export type AboutChannel = {
+  id: string;
+  title: string;
+  href?: string;
+  status: "coming-soon" | "active";
+  order: number;
+};
+
+export type AboutNewsItem = {
+  id: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  href: string;
+  order: number;
+};
+
+export type AboutPageData = {
+  collaborationEmail: string;
+  recruitmentHref: string;
+  resources: AboutResource[];
+  channels: AboutChannel[];
+  news: AboutNewsItem[];
+};

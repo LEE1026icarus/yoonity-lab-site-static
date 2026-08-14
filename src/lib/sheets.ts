@@ -1,5 +1,9 @@
 import type {
   Activity,
+  AboutChannel,
+  AboutNewsItem,
+  AboutPageData,
+  AboutResource,
   Article,
   Member,
   Professor,
@@ -11,6 +15,7 @@ import { professor as mockProfessor } from "@/data/mock-professor";
 import { mockActivities } from "@/data/mock-activities";
 import { mockPublications } from "@/data/mock-publications";
 import { mockMembers } from "@/data/mock-members";
+import { mockAboutPageData } from "@/data/mock-about";
 import { fetchSheetRows, updateSheetCell } from "./google-sheets-client";
 
 export async function getArticles(): Promise<Article[]> {
@@ -129,4 +134,72 @@ export async function updatePublicationHref(
   const rowNum = rowIndex + 2;
   const success = await updateSheetCell("publications", `F${rowNum}`, href);
   return success;
+}
+
+const isVisible = (value: string) => value.toUpperCase() !== "FALSE";
+const toOrder = (value: string, fallback: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+export async function getAboutPageData(): Promise<AboutPageData> {
+  const [settingsRows, resourceRows, channelRows, newsRows] = await Promise.all([
+    fetchSheetRows("about_settings"),
+    fetchSheetRows("about_resources"),
+    fetchSheetRows("about_channels"),
+    fetchSheetRows("about_news"),
+  ]);
+
+  const settings = new Map(settingsRows.map((row) => [row.key, row.value]));
+  const resources = resourceRows
+    .filter((row) => isVisible(row.visible || "TRUE"))
+    .map<AboutResource>((row, index) => ({
+      id: row.id,
+      title: row.title,
+      description: row.description || "",
+      href: row.href,
+      order: toOrder(row.order, index + 1),
+    }))
+    .filter((resource) => resource.id && resource.title && resource.href)
+    .sort((a, b) => a.order - b.order);
+
+  const channels = channelRows
+    .map<AboutChannel>((row, index) => {
+      const active = row.status === "active" && Boolean(row.href);
+      return {
+        id: row.id,
+        title: row.title,
+        href: active ? row.href : undefined,
+        status: active ? "active" : "coming-soon",
+        order: toOrder(row.order, index + 1),
+      };
+    })
+    .filter((channel) => channel.id && channel.title)
+    .sort((a, b) => a.order - b.order);
+
+  const news = newsRows
+    .filter((row) => isVisible(row.visible || "TRUE"))
+    .map<AboutNewsItem>((row, index) => ({
+      id: row.id,
+      date: row.date,
+      title: row.title,
+      excerpt: row.excerpt || "",
+      href: row.href,
+      order: toOrder(row.order, index + 1),
+    }))
+    .filter((item) => item.id && item.date && item.title && item.href)
+    .sort(
+      (a, b) =>
+        b.date.localeCompare(a.date) || a.order - b.order || a.id.localeCompare(b.id),
+    );
+
+  return {
+    collaborationEmail:
+      settings.get("collaboration_email") || mockAboutPageData.collaborationEmail,
+    recruitmentHref:
+      settings.get("recruitment_href") || mockAboutPageData.recruitmentHref,
+    resources: resources.length ? resources : mockAboutPageData.resources,
+    channels: channels.length ? channels : mockAboutPageData.channels,
+    news: news.length ? news : mockAboutPageData.news,
+  };
 }
