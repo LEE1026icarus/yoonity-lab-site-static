@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
@@ -16,6 +17,8 @@ import {
   PUBLICATION_SECTIONS,
   RESEARCHER_SECTIONS,
 } from "../src/data/site-navigation.ts";
+
+const openGraphImagePath = new URL("../src/app/opengraph-image.tsx", import.meta.url);
 
 test("site URL prefers the explicit canonical domain and normalizes its path", () => {
   const url = resolveSiteUrl({
@@ -148,6 +151,17 @@ test("every page has route-consistent Open Graph and Twitter metadata", () => {
     PAGE_METADATA["/about"].openGraph.title.match(/Yoonity Lab/g)?.length,
     1,
   );
+});
+
+test("Open Graph image uses the Next.js file convention at 1200 by 630", async () => {
+  const source = await readFile(openGraphImagePath, "utf8").catch(() => "");
+
+  assert.match(source, /import \{ ImageResponse \} from "next\/og"/);
+  assert.match(source, /export const alt =/);
+  assert.match(source, /width:\s*1200/);
+  assert.match(source, /height:\s*630/);
+  assert.match(source, /export const contentType = "image\/png"/);
+  assert.doesNotMatch(source, /runtime\s*=\s*["']edge["']/);
 });
 
 test("category navigation uses crawlable anchors instead of duplicate query URLs", () => {
