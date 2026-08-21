@@ -3,16 +3,18 @@ import { pretendard } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
 import { BackgroundScene } from "@/components/background-scene";
 import { siteUrl } from "@/lib/site";
+import { HOME_DESCRIPTION, HOME_TITLE, PAGE_METADATA } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: "동국대학교 경영정보학과 산업 문제 해결형 AI 연구실 | Yoonity Lab",
+    default: HOME_TITLE,
     template: "%s | Yoonity Lab",
   },
-  description:
-    "동국대학교 경영정보학과 Yoonity Lab은 AI·생성형 AI·양자컴퓨팅을 활용해 산업 의사결정, 예측·최적화 및 산학협력 과제를 연구합니다.",
+  description: HOME_DESCRIPTION,
+  openGraph: PAGE_METADATA["/"].openGraph,
+  twitter: PAGE_METADATA["/"].twitter,
 };
 
 export default function RootLayout({

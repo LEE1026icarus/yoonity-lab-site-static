@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   INDEXABLE_ROUTES,
   resolveSiteUrl,
+  siteUrl,
 } from "../src/lib/site.ts";
 import {
   createRobotsConfig,
@@ -73,10 +74,80 @@ test("every indexable page declares a self-referencing canonical URL", () => {
 });
 
 test("home and about metadata reflect the current research and audience intent", () => {
-  assert.match(PAGE_METADATA["/"].title, /동국대학교 경영정보학과/);
+  const homeTitle =
+    typeof PAGE_METADATA["/"].title === "string"
+      ? PAGE_METADATA["/"].title
+      : PAGE_METADATA["/"].title.absolute;
+
+  assert.match(homeTitle, /동국대학교 경영정보학과/);
   assert.match(PAGE_METADATA["/"].description, /AI·생성형 AI·양자컴퓨팅/);
   assert.match(PAGE_METADATA["/about"].title, /연구원 모집·산학협력/);
   assert.match(PAGE_METADATA["/about"].description, /대학원생·학부연구생/);
+});
+
+test("subpage metadata targets each route without duplicating the title template", () => {
+  assert.match(
+    PAGE_METADATA["/professor"].title,
+    /윤상혁 교수.*동국대학교 경영정보학과/,
+  );
+  assert.match(
+    PAGE_METADATA["/professor"].description,
+    /지도교수.*AI.*생성형 AI.*양자컴퓨팅.*연구 분야/,
+  );
+  assert.match(PAGE_METADATA["/researchers"].title, /연구진·졸업생/);
+  assert.match(
+    PAGE_METADATA["/researchers"].description,
+    /대학원생.*학부연구생.*연구 분야.*졸업생/,
+  );
+  assert.match(PAGE_METADATA["/publications"].title, /논문·도서·특허/);
+  assert.match(
+    PAGE_METADATA["/publications"].description,
+    /해외.*국내.*논문.*도서.*특허.*연구성과/,
+  );
+  assert.match(PAGE_METADATA["/activities"].title, /연구과제·수상·대외활동/);
+  assert.match(
+    PAGE_METADATA["/activities"].description,
+    /산학협력.*연구과제.*수상.*학술.*대외활동/,
+  );
+
+  for (const route of INDEXABLE_ROUTES.slice(1)) {
+    assert.doesNotMatch(PAGE_METADATA[route].title, /Yoonity Lab/);
+  }
+});
+
+test("every page has route-consistent Open Graph and Twitter metadata", () => {
+  const shareImageUrl = new URL("/opengraph-image", siteUrl).toString();
+
+  for (const route of INDEXABLE_ROUTES) {
+    const entry = PAGE_METADATA[route];
+    const pageUrl = new URL(route, siteUrl).toString();
+
+    assert.equal(entry.openGraph.url, pageUrl);
+    assert.equal(entry.openGraph.type, "website");
+    assert.equal(entry.openGraph.locale, "ko_KR");
+    assert.equal(entry.openGraph.siteName, "Yoonity Lab");
+    assert.deepEqual(entry.openGraph.images, [
+      {
+        url: shareImageUrl,
+        width: 1200,
+        height: 630,
+        alt: "Yoonity Lab — 산업 문제 해결형 AI 연구실",
+      },
+    ]);
+    assert.equal(entry.twitter.card, "summary_large_image");
+    assert.deepEqual(entry.twitter.images, [shareImageUrl]);
+    assert.equal(entry.twitter.description, entry.description);
+  }
+
+  assert.deepEqual(PAGE_METADATA["/"].title, {
+    absolute: PAGE_METADATA["/"].openGraph.title,
+  });
+  assert.equal(PAGE_METADATA["/about"].openGraph.url, new URL("/about", siteUrl).toString());
+  assert.match(PAGE_METADATA["/about"].openGraph.title, /연구실 소개/);
+  assert.equal(
+    PAGE_METADATA["/about"].openGraph.title.match(/Yoonity Lab/g)?.length,
+    1,
+  );
 });
 
 test("category navigation uses crawlable anchors instead of duplicate query URLs", () => {
