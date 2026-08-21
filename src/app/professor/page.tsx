@@ -4,11 +4,9 @@ import { getProfessor } from "@/lib/sheets";
 import { Timeline } from "@/components/timeline";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { PAGE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "지도교수 — yoonity",
-  description: "Yoonity 연구실 지도교수 소개",
-};
+export const metadata: Metadata = PAGE_METADATA["/professor"];
 
 export const revalidate = 60;
 

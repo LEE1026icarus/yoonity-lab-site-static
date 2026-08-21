@@ -3,11 +3,9 @@ import { getActivities } from "@/lib/sheets";
 import { ActivitiesList } from "@/components/activities-list";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { PAGE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "활동 — yoonity",
-  description: "Yoonity 연구실의 연구 과제, 수상내역, 학회수상, 대외 활동",
-};
+export const metadata: Metadata = PAGE_METADATA["/activities"];
 
 export const revalidate = 60;
 

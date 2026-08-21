@@ -1,9 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ResearchAxes } from "@/components/research-axes";
 import { ProcessSteps } from "@/components/process-steps";
 import { RelatedArticles } from "@/components/related-articles";
 import { SiteFooter } from "@/components/site-footer";
 import { siteCopy } from "@/data/site-copy";
+import { PAGE_METADATA } from "@/lib/seo";
+
+export const metadata: Metadata = PAGE_METADATA["/"];
 
 export const revalidate = 60;
 
