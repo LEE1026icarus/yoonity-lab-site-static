@@ -8,6 +8,7 @@ import { siteCopy } from "@/data/site-copy";
 import { getAboutPageData } from "@/lib/sheets";
 import { PAGE_METADATA } from "@/lib/seo";
 import { createAboutPageStructuredData } from "@/lib/structured-data";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata: Metadata = PAGE_METADATA["/about"];
 
@@ -22,6 +23,7 @@ export default async function AboutPage() {
     <>
       <JsonLd data={createAboutPageStructuredData()} />
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-32">
+        <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "연구실 소개", href: "/about" }]} />
         <ScrollReveal>
           <section>
             <p className="text-sm font-semibold text-ink-muted">연구실 소개</p>

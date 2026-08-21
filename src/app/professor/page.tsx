@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { JsonLd } from "@/components/json-ld";
 import { PAGE_METADATA } from "@/lib/seo";
 import { createProfessorStructuredData } from "@/lib/structured-data";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata: Metadata = PAGE_METADATA["/professor"];
 
@@ -20,6 +21,7 @@ export default async function ProfessorPage() {
     <>
       <JsonLd data={createProfessorStructuredData(p)} />
       <main className="mx-auto max-w-4xl flex-1 px-6 py-32">
+      <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "지도교수", href: "/professor" }]} />
       <ScrollReveal>
         <p className="text-[20px] font-semibold text-ink-muted">지도교수</p>
 

@@ -1,11 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import type { AboutNewsItem } from "@/lib/types";
 
 const subscribe = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
+const isExternalHttpUrl = (value: string) => /^https?:\/\//.test(value);
 
 export function AboutNews({ items }: { items: AboutNewsItem[] }) {
   const [expanded, setExpanded] = useState(false);
@@ -32,19 +34,27 @@ export function AboutNews({ items }: { items: AboutNewsItem[] }) {
               {item.date.replaceAll("-", ".")}
             </time>
             <h3 className="mt-2 text-xl font-bold leading-snug">
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/news/${item.id}`}
                 className="transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
               >
                 {item.title}
-              </a>
+              </Link>
             </h3>
             {item.excerpt && (
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">
                 {item.excerpt}
               </p>
+            )}
+            {isExternalHttpUrl(item.href) && (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex text-sm font-semibold text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+              >
+                원문 출처 보기 ↗
+              </a>
             )}
           </article>
         ))}

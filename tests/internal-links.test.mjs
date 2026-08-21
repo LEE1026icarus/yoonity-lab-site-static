@@ -1,11 +1,23 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const footerPath = new URL("../src/components/site-footer.tsx", import.meta.url);
 const axesPath = new URL("../src/components/research-axes.tsx", import.meta.url);
 const aboutPath = new URL("../src/app/about/page.tsx", import.meta.url);
 const professorPath = new URL("../src/app/professor/page.tsx", import.meta.url);
+const sharedPagePaths = [
+  new URL("../src/app/about/page.tsx", import.meta.url),
+  new URL("../src/app/professor/page.tsx", import.meta.url),
+  new URL("../src/app/researchers/page.tsx", import.meta.url),
+  new URL("../src/app/publications/page.tsx", import.meta.url),
+  new URL("../src/app/activities/page.tsx", import.meta.url),
+];
+const detailRoutePaths = [
+  new URL("../src/app/news/[slug]/page.tsx", import.meta.url),
+  new URL("../src/app/projects/[slug]/page.tsx", import.meta.url),
+  new URL("../src/app/publications/[slug]/page.tsx", import.meta.url),
+];
 
 function countPath(source, path) {
   return source.split(`"${path}"`).length - 1;
@@ -57,4 +69,48 @@ test("About and professor copy provides the requested contextual links", async (
   assert.match(professor, /href="\/publications"/);
   assert.match(professor, /논문·도서·특허에서 연구성과/);
   assert.doesNotMatch(`${about}${professor}`, /href=""/);
+});
+
+test("detail route families expose metadata, static params, and not-found handling", async () => {
+  for (const path of detailRoutePaths) {
+    let exists = true;
+    try {
+      await access(path);
+    } catch {
+      exists = false;
+    }
+    assert.equal(exists, true, `${path.pathname} must exist`);
+    const source = await readFile(path, "utf8");
+    assert.match(source, /export const revalidate = 60/);
+    assert.match(source, /generateStaticParams/);
+    assert.match(source, /generateMetadata/);
+    assert.match(source, /notFound\(\)/);
+  }
+});
+
+test("lists expose crawlable internal detail destinations", async () => {
+  const [aboutNews, articles, activities, publications] = await Promise.all([
+    readFile(new URL("../src/components/about-news.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/related-articles.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/activities-list.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/publications-list.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(aboutNews, /\/news\//);
+  assert.match(articles, /\/news\//);
+  assert.match(activities, /\/projects\//);
+  assert.match(publications, /\/publications\//);
+});
+
+test("all non-home indexable pages render the shared Breadcrumbs component", async () => {
+  const pages = await Promise.all(sharedPagePaths.map((path) => readFile(path, "utf8")));
+
+  for (const page of pages) assert.match(page, /<Breadcrumbs/);
+});
+
+test("sitemap appends detail entries from the shared loader", async () => {
+  const sitemap = await readFile(new URL("../src/app/sitemap.ts", import.meta.url), "utf8");
+
+  assert.match(sitemap, /createDetailSitemapEntries/);
+  assert.match(sitemap, /export default async function sitemap/);
 });
