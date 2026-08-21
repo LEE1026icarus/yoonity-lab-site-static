@@ -40,8 +40,30 @@ function absoluteUrl(path: string, baseUrl: URL) {
   return new URL(path, baseUrl).toString();
 }
 
-function optionalAbsoluteUrl(value: string | undefined, baseUrl: URL) {
-  return value?.trim() ? absoluteUrl(value, baseUrl) : undefined;
+function optionalWebUrl(value: string | undefined, baseUrl: URL) {
+  if (!value?.trim()) return undefined;
+
+  try {
+    const url = new URL(value, baseUrl);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function optionalExternalWebUrl(value: string | undefined) {
+  if (!value?.trim()) return undefined;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function organizationId(baseUrl: URL) {
@@ -89,7 +111,7 @@ export function createProfessorStructuredData(
   const pageUrl = absoluteUrl("/professor", baseUrl);
   const personId = absoluteUrl("/professor#person", baseUrl);
   const sameAs = professor.links.flatMap(({ href }) => {
-    const url = optionalAbsoluteUrl(href, baseUrl);
+    const url = optionalExternalWebUrl(href);
     return url ? [url] : [];
   });
 
@@ -103,7 +125,7 @@ export function createProfessorStructuredData(
         description: PAGE_METADATA["/professor"].description,
         url: pageUrl,
         mainEntity: { "@id": personId },
-        isPartOf: { "@id": organizationId(baseUrl) },
+        about: { "@id": organizationId(baseUrl) },
       },
       {
         "@type": "Person",
@@ -114,7 +136,7 @@ export function createProfessorStructuredData(
           "@type": "Organization",
           name: "동국대학교 경영정보학과",
         },
-        image: optionalAbsoluteUrl(professor.photo, baseUrl),
+        image: optionalWebUrl(professor.photo, baseUrl),
         email: professor.email,
         url: pageUrl,
         sameAs,

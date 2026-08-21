@@ -53,7 +53,8 @@ test("professor structured data connects ProfilePage to a repository-backed Pers
   assert.equal(profilePage["@type"], "ProfilePage");
   assert.equal(profilePage.url, "https://lab.example.edu/professor");
   assert.equal(profilePage.mainEntity["@id"], "https://lab.example.edu/professor#person");
-  assert.equal(profilePage.isPartOf["@id"], "https://lab.example.edu/#organization");
+  assert.equal(profilePage.about?.["@id"], "https://lab.example.edu/#organization");
+  assert.equal(profilePage.isPartOf, undefined);
 
   assert.equal(person["@type"], "Person");
   assert.equal(person["@id"], profilePage.mainEntity["@id"]);
@@ -102,4 +103,36 @@ test("structured data omits blank optional values and escapes script-breaking ma
   assert.deepEqual(structuredData["@graph"][1].knowsAbout, ["생성형 AI"]);
   assert.equal(serialized, '{"value":"\\u003c/script>"}');
   assert.doesNotMatch(serialized, /</);
+});
+
+test("professor structured data ignores malformed and non-web optional URLs", () => {
+  let structuredData;
+
+  assert.doesNotThrow(() => {
+    structuredData = createProfessorStructuredData(
+      {
+        name: "윤상혁",
+        title: "동국대학교 경영정보학과 교수",
+        email: "yoonsh@dgu.ac.kr",
+        photo: "https://[invalid",
+        links: [
+          { label: "Malformed", href: "https://[invalid" },
+          { label: "Relative", href: "/relative-profile" },
+          { label: "Mail", href: "mailto:yoonsh@dgu.ac.kr" },
+          { label: "Script", href: "javascript:alert(1)" },
+          { label: "Valid", href: "https://example.edu/profile" },
+        ],
+        expertise: ["생성형 AI"],
+        career: [],
+        education: [],
+        skills: [],
+        other: [],
+      },
+      baseUrl,
+    );
+  });
+
+  const person = structuredData["@graph"][1];
+  assert.equal(person.image, undefined);
+  assert.deepEqual(person.sameAs, ["https://example.edu/profile"]);
 });
