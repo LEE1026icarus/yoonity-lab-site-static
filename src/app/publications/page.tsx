@@ -3,11 +3,9 @@ import { getPublications } from "@/lib/sheets";
 import { PublicationsList } from "@/components/publications-list";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { PAGE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "출판 — yoonity",
-  description: "Yoonity 연구실의 해외/국내 논문, 도서, 특허",
-};
+export const metadata: Metadata = PAGE_METADATA["/publications"];
 
 export const revalidate = 60;
 

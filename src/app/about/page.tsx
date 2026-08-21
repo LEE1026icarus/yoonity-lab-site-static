@@ -4,12 +4,9 @@ import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { siteCopy } from "@/data/site-copy";
 import { getAboutPageData } from "@/lib/sheets";
+import { PAGE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "연구실 소개 — Yoonity",
-  description:
-    "Yoonity 연구실의 연구, 대학원생 모집, 산학협력, 자료와 소식을 소개합니다.",
-};
+export const metadata: Metadata = PAGE_METADATA["/about"];
 
 export const revalidate = 60;
 

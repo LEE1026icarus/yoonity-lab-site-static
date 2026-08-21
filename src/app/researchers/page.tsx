@@ -4,11 +4,9 @@ import { matchMemberPublications } from "@/lib/member-publications";
 import { MembersList } from "@/components/members-list";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { PAGE_METADATA } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "연구원 — yoonity",
-  description: "Yoonity 연구실 연구원 및 졸업자",
-};
+export const metadata: Metadata = PAGE_METADATA["/researchers"];
 
 export const revalidate = 60;
 

@@ -5,32 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDownIcon } from "lucide-react";
-
-const NAV_LINKS = [
-  { label: "지도교수", href: "/professor" },
-  { label: "활동", href: "/activities", submenu: "activity" },
-  { label: "출판", href: "/publications", submenu: "publication" },
-  { label: "연구원", href: "/researchers", submenu: "researcher" },
-];
-
-const ACTIVITY_SUBMENU = [
-  { label: "연구과제", href: "/activities?category=project" },
-  { label: "수상내역", href: "/activities?category=award" },
-  { label: "학회수상", href: "/activities?category=academic-award" },
-  { label: "대외", href: "/activities?category=external" },
-];
-
-const PUBLICATION_SUBMENU = [
-  { label: "해외 논문", href: "/publications?category=intl-paper" },
-  { label: "국내 논문", href: "/publications?category=domestic-paper" },
-  { label: "도서", href: "/publications?category=book" },
-  { label: "특허", href: "/publications?category=patent" },
-];
-
-const RESEARCHER_SUBMENU = [
-  { label: "연구원", href: "/researchers?status=current" },
-  { label: "졸업자", href: "/researchers?status=alumni" },
-];
+import { MAIN_NAV_LINKS, SUBMENU_LINKS } from "@/data/site-navigation";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -71,7 +46,7 @@ export function SiteHeader() {
           </Link>
 
           <nav className="hidden items-center gap-8 text-sm text-ink-muted md:flex">
-            {NAV_LINKS.map((link) => (
+            {MAIN_NAV_LINKS.map((link) => (
               <div
                 key={link.label}
                 className="relative"
@@ -103,12 +78,7 @@ export function SiteHeader() {
                         className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-hairline bg-paper-raised shadow-lg"
                       >
                         <div className="flex flex-col gap-1 p-3">
-                          {(link.submenu === "activity"
-                            ? ACTIVITY_SUBMENU
-                            : link.submenu === "publication"
-                              ? PUBLICATION_SUBMENU
-                              : RESEARCHER_SUBMENU
-                          ).map((item) => (
+                          {SUBMENU_LINKS[link.submenu].map((item) => (
                             <Link
                               key={item.label}
                               href={item.href}
@@ -163,7 +133,7 @@ export function SiteHeader() {
             className="overflow-hidden border-b border-hairline bg-paper md:hidden"
           >
             <div className="flex flex-col gap-1 px-6 py-4">
-              {NAV_LINKS.map((link) => (
+              {MAIN_NAV_LINKS.map((link) => (
                 <div key={link.label}>
                   {link.submenu ? (
                     <button
@@ -193,12 +163,7 @@ export function SiteHeader() {
                   )}
                   {link.submenu && activeSubmenu === link.submenu && (
                     <div className="flex flex-col gap-1 pl-4">
-                      {(link.submenu === "activity"
-                        ? ACTIVITY_SUBMENU
-                        : link.submenu === "publication"
-                          ? PUBLICATION_SUBMENU
-                          : RESEARCHER_SUBMENU
-                      ).map((item) => (
+                      {SUBMENU_LINKS[link.submenu].map((item) => (
                         <Link
                           key={item.label}
                           href={item.href}
