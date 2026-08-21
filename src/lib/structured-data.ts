@@ -1,5 +1,10 @@
 import { siteCopy } from "@/data/site-copy";
-import type { Professor } from "@/lib/types";
+import type {
+  NewsDetail,
+  Professor,
+  ProjectDetail,
+  PublicationDetail,
+} from "@/lib/types";
 import { PAGE_METADATA } from "./seo";
 import { siteUrl } from "./site";
 
@@ -149,4 +154,114 @@ export function createProfessorStructuredData(
 export function serializeJsonLd(value: unknown) {
   const compacted = compactStructuredData(value) ?? {};
   return JSON.stringify(compacted).replace(/</g, "\\u003c");
+}
+
+type DetailRecord = {
+  kind: "news" | "projects" | "publications";
+  slug: string;
+  title: string;
+  href?: string;
+};
+
+function detailPageUrl(record: DetailRecord, baseUrl: URL) {
+  return absoluteUrl(`/${record.kind}/${record.slug}`, baseUrl);
+}
+
+function detailOrganizationReference(baseUrl: URL) {
+  return { "@id": organizationId(baseUrl) };
+}
+
+function detailSourceUrl(href: string | undefined) {
+  return optionalExternalWebUrl(href);
+}
+
+export function createNewsStructuredData(
+  news: NewsDetail | undefined,
+  baseUrl: URL = siteUrl,
+): JsonLdObject {
+  if (!news) return {};
+  const url = detailPageUrl(news, baseUrl);
+
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "@id": `${url}#news-article`,
+    headline: news.title,
+    name: news.title,
+    description: news.excerpt,
+    datePublished: news.date,
+    url,
+    mainEntityOfPage: { "@id": url },
+    about: detailOrganizationReference(baseUrl),
+    isBasedOn: detailSourceUrl(news.href),
+  });
+}
+
+export function createProjectStructuredData(
+  project: ProjectDetail | undefined,
+  baseUrl: URL = siteUrl,
+): JsonLdObject {
+  if (!project) return {};
+  const url = detailPageUrl(project, baseUrl);
+  const description = [project.org, project.tag, project.period]
+    .filter((value): value is string => Boolean(value?.trim()))
+    .join(" · ");
+
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": "ResearchProject",
+    "@id": `${url}#research-project`,
+    name: project.title,
+    description,
+    url,
+    mainEntityOfPage: { "@id": url },
+    about: detailOrganizationReference(baseUrl),
+    sponsor: project.org ? { "@type": "Organization", name: project.org } : undefined,
+    isBasedOn: detailSourceUrl(project.href),
+  });
+}
+
+export function createPublicationStructuredData(
+  publication: PublicationDetail | undefined,
+  baseUrl: URL = siteUrl,
+): JsonLdObject {
+  if (!publication) return {};
+  const url = detailPageUrl(publication, baseUrl);
+  const type = publication.category === "book"
+    ? "Book"
+    : publication.category === "patent"
+      ? "CreativeWork"
+      : "ScholarlyArticle";
+
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": type,
+    "@id": `${url}#publication`,
+    name: publication.title,
+    description: publication.meta,
+    genre: publication.category === "patent" ? "특허" : undefined,
+    identifier: publication.slug,
+    url,
+    mainEntityOfPage: { "@id": url },
+    about: detailOrganizationReference(baseUrl),
+    isBasedOn: detailSourceUrl(publication.href),
+  });
+}
+
+export type BreadcrumbItem = { label: string; href: string };
+
+export function createBreadcrumbStructuredData(
+  items: BreadcrumbItem[],
+  baseUrl: URL = siteUrl,
+): JsonLdObject {
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.label,
+      item: absoluteUrl(item.href, baseUrl),
+    })),
+  });
 }

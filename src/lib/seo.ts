@@ -15,6 +15,13 @@ export const SHARE_IMAGE = {
 
 type IndexableRoute = (typeof INDEXABLE_ROUTES)[number];
 
+type DetailMetadataInput = {
+  route: string;
+  title: string;
+  description: string;
+  type?: "website" | "article";
+};
+
 type PageMetadata = {
   title: string | { absolute: string };
   description: string;
@@ -62,6 +69,39 @@ function createPageMetadata(
       title: brandedTitle,
       description,
       images: [SHARE_IMAGE.url],
+    },
+  };
+}
+
+export function createDetailMetadata(
+  { route, title, description, type = "website" }: DetailMetadataInput,
+  baseUrl: URL = siteUrl,
+) {
+  const brandedTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: route },
+    openGraph: {
+      type,
+      locale: "ko_KR",
+      siteName: SITE_NAME,
+      title: brandedTitle,
+      description,
+      url: new URL(route, baseUrl).toString(),
+      images: [
+        {
+          ...SHARE_IMAGE,
+          url: new URL("/opengraph-image", baseUrl).toString(),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: brandedTitle,
+      description,
+      images: [new URL("/opengraph-image", baseUrl).toString()],
     },
   };
 }

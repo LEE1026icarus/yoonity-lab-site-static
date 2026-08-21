@@ -153,6 +153,20 @@ test("every page has route-consistent Open Graph and Twitter metadata", () => {
   );
 });
 
+test("detail route metadata and links use crawlable internal paths", async () => {
+  const [source, aboutNews, activities, publications] = await Promise.all([
+    readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/about-news.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/activities-list.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/publications-list.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(source, /createDetailMetadata/);
+  assert.match(aboutNews, /\/news\//);
+  assert.match(activities, /\/projects\//);
+  assert.match(publications, /\/publications\//);
+});
+
 test("Open Graph image uses the Next.js file convention at 1200 by 630", async () => {
   const source = await readFile(openGraphImagePath, "utf8").catch(() => "");
 

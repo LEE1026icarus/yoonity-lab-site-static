@@ -111,3 +111,29 @@ export type AboutPageData = {
   channels: AboutChannel[];
   news: AboutNewsItem[];
 };
+
+export type NewsDetail = {
+  kind: "news";
+  slug: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  href?: string;
+  accent?: Article["accent"];
+  thumbnail?: string;
+};
+
+export type ProjectDetail = {
+  kind: "projects";
+  slug: string;
+  title: string;
+  org?: string;
+  tag?: string;
+  period: string;
+  href?: string;
+};
+
+export type PublicationDetail = Publication & {
+  kind: "publications";
+  slug: string;
+};

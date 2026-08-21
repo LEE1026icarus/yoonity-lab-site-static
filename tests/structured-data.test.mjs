@@ -3,10 +3,18 @@ import test from "node:test";
 
 import {
   createAboutPageStructuredData,
+  createNewsStructuredData,
   createOrganizationStructuredData,
+  createProjectStructuredData,
   createProfessorStructuredData,
+  createPublicationStructuredData,
   serializeJsonLd,
 } from "../src/lib/structured-data.ts";
+import {
+  getNewsDetail,
+  getProjectDetail,
+  getPublicationDetail,
+} from "../src/lib/content-details.ts";
 
 const baseUrl = new URL("https://lab.example.edu/");
 
@@ -135,4 +143,24 @@ test("professor structured data ignores malformed and non-web optional URLs", ()
   const person = structuredData["@graph"][1];
   assert.equal(person.image, undefined);
   assert.deepEqual(person.sameAs, ["https://example.edu/profile"]);
+});
+
+test("detail structured data uses only repository-backed fields", async () => {
+  const [news, project, publication] = await Promise.all([
+    getNewsDetail("genai-edu-award-2024"),
+    getProjectDetail("project-1"),
+    getPublicationDetail("intl-0"),
+  ]);
+  const newsData = createNewsStructuredData(news, baseUrl);
+  const projectData = createProjectStructuredData(project, baseUrl);
+  const publicationData = createPublicationStructuredData(publication, baseUrl);
+
+  assert.equal(newsData["@type"], "NewsArticle");
+  assert.equal(newsData.datePublished, "2024-12-05");
+  assert.equal(newsData.articleBody, undefined);
+  assert.equal(projectData["@type"], "ResearchProject");
+  assert.equal(projectData.funder, undefined);
+  assert.equal(publicationData["@type"], "ScholarlyArticle");
+  assert.equal(publicationData.author, undefined);
+  assert.equal(JSON.stringify(publicationData).includes("undefined"), false);
 });
