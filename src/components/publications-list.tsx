@@ -1,5 +1,6 @@
 import { PUBLICATION_SECTIONS } from "@/data/site-navigation";
 import type { Publication } from "@/lib/types";
+import Link from "next/link";
 
 export function PublicationsList({ publications }: { publications: Publication[] }) {
   return (
@@ -42,20 +43,24 @@ export function PublicationsList({ publications }: { publications: Publication[]
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        {publication.href ? (
-                          <a
-                            href={publication.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <>
+                          <Link
+                            href={`/publications/${publication.id}`}
                             className="text-[20px] leading-relaxed underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
                           >
                             {publication.title}
-                          </a>
-                        ) : (
-                          <p className="text-[20px] leading-relaxed">
-                            {publication.title}
-                          </p>
-                        )}
+                          </Link>
+                          {/^https?:\/\//.test(publication.href ?? "") && (
+                            <a
+                              href={publication.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-3 text-sm font-semibold text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+                            >
+                              원문 출처 ↗
+                            </a>
+                          )}
+                        </>
                         {publication.meta && (
                           <p className="mt-1.5 text-[17px] text-ink-muted">
                             {publication.meta}

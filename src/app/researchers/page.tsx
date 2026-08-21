@@ -5,6 +5,7 @@ import { MembersList } from "@/components/members-list";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
 import { PAGE_METADATA } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const metadata: Metadata = PAGE_METADATA["/researchers"];
 
@@ -24,6 +25,7 @@ export default async function ResearchersPage() {
   return (
     <>
       <main className="mx-auto w-full min-w-0 max-w-4xl flex-1 px-6 py-32">
+        <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "연구진·졸업생", href: "/researchers" }]} />
         <ScrollReveal>
           <p className="text-[20px] font-semibold text-ink-muted">연구원</p>
           <h1 className="mt-3 text-[54px] font-black tracking-tight">

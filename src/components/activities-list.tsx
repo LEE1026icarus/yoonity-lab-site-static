@@ -1,5 +1,6 @@
 import { ACTIVITY_SECTIONS } from "@/data/site-navigation";
 import type { Activity } from "@/lib/types";
+import Link from "next/link";
 
 export function ActivitiesList({ activities }: { activities: Activity[] }) {
   return (
@@ -38,7 +39,14 @@ export function ActivitiesList({ activities }: { activities: Activity[] }) {
                 <ul className="mt-4 divide-y divide-hairline">
                   {items.map((activity) => (
                     <li key={activity.id} className="py-5">
-                      {activity.href ? (
+                      {activity.category === "project" ? (
+                        <Link
+                          href={`/projects/${activity.id}`}
+                          className="text-[22px] font-bold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
+                        >
+                          {activity.title}
+                        </Link>
+                      ) : activity.href ? (
                         <a
                           href={activity.href}
                           target="_blank"
@@ -49,6 +57,16 @@ export function ActivitiesList({ activities }: { activities: Activity[] }) {
                         </a>
                       ) : (
                         <p className="text-[22px] font-bold">{activity.title}</p>
+                      )}
+                      {activity.category === "project" && /^https?:\/\//.test(activity.href ?? "") && (
+                        <a
+                          href={activity.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-3 text-sm font-semibold text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+                        >
+                          원문 출처 ↗
+                        </a>
                       )}
                       <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[20px] text-ink-muted">
                         {activity.org && <span>{activity.org}</span>}

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
-import { createSitemapEntries } from "@/lib/seo";
+import { createDetailSitemapEntries } from "@/lib/content-details";
 import { siteUrl } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  return createSitemapEntries(siteUrl);
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return createDetailSitemapEntries(siteUrl);
 }
