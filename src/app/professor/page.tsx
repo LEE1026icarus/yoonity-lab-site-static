@@ -4,7 +4,9 @@ import { getProfessor } from "@/lib/sheets";
 import { Timeline } from "@/components/timeline";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
 import { PAGE_METADATA } from "@/lib/seo";
+import { createProfessorStructuredData } from "@/lib/structured-data";
 
 export const metadata: Metadata = PAGE_METADATA["/professor"];
 
@@ -15,6 +17,7 @@ export default async function ProfessorPage() {
 
   return (
     <>
+      <JsonLd data={createProfessorStructuredData(p)} />
       <main className="mx-auto max-w-4xl flex-1 px-6 py-32">
       <ScrollReveal>
         <p className="text-[20px] font-semibold text-ink-muted">지도교수</p>

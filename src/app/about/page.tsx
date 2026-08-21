@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { AboutNews } from "@/components/about-news";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
 import { siteCopy } from "@/data/site-copy";
 import { getAboutPageData } from "@/lib/sheets";
 import { PAGE_METADATA } from "@/lib/seo";
+import { createAboutPageStructuredData } from "@/lib/structured-data";
 
 export const metadata: Metadata = PAGE_METADATA["/about"];
 
@@ -17,6 +19,7 @@ export default async function AboutPage() {
 
   return (
     <>
+      <JsonLd data={createAboutPageStructuredData()} />
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-32">
         <ScrollReveal>
           <section>
