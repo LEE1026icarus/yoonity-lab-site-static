@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { getProfessor } from "@/lib/sheets";
 import { Timeline } from "@/components/timeline";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -75,6 +76,12 @@ export default async function ProfessorPage() {
               </li>
             ))}
           </ul>
+          <Link
+            href="/publications"
+            className="mt-7 inline-flex text-sm font-semibold transition-opacity hover:opacity-65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+          >
+            논문·도서·특허에서 연구성과 보기 →
+          </Link>
         </section>
       </ScrollReveal>
 
