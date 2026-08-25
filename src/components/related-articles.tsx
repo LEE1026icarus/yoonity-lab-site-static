@@ -26,48 +26,55 @@ export async function RelatedArticles() {
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {featuredArticles.map((article, i) => (
           <ScrollReveal key={article.id} delay={0.06 + (i % 3) * 0.08}>
-            <a
-              href={article.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block h-full overflow-hidden rounded-2xl border border-hairline bg-paper-raised transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5"
-            >
-              <div
-                className={`relative aspect-[16/10] overflow-hidden ${
-                  article.thumbnail ? "" : `bg-gradient-to-br ${ACCENT_CLASSES[article.accent]} to-transparent`
-                }`}
-              >
-                {article.thumbnail ? (
-                  // External Sheet-managed image URLs are intentionally rendered as-is.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={article.thumbnail}
-                    alt={article.title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div
-                    className="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(currentColor 1px, transparent 1px)",
-                      backgroundSize: "18px 18px",
-                    }}
-                  />
-                )}
-              </div>
-              <div className="p-6">
-                <time className="text-xs font-medium text-ink-muted">
-                  {article.date}
-                </time>
-                <h3 className="mt-2 line-clamp-2 text-base font-bold leading-snug">
-                  {article.title}
-                </h3>
-                <p className="mt-2 line-clamp-2 text-sm text-ink-muted">
-                  {article.excerpt}
-                </p>
-              </div>
-            </a>
+            <div className="overflow-hidden rounded-2xl border border-hairline bg-paper-raised transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/5">
+              <Link href={`/news/${article.id}`} className="group block">
+                <div
+                  className={`relative aspect-[16/10] overflow-hidden ${
+                    article.thumbnail ? "" : `bg-gradient-to-br ${ACCENT_CLASSES[article.accent]} to-transparent`
+                  }`}
+                >
+                  {article.thumbnail ? (
+                    // External Sheet-managed image URLs are intentionally rendered as-is.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={article.thumbnail}
+                      alt={article.title}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 opacity-30 transition-transform duration-500 group-hover:scale-110"
+                      style={{
+                        backgroundImage:
+                          "radial-gradient(currentColor 1px, transparent 1px)",
+                        backgroundSize: "18px 18px",
+                      }}
+                    />
+                  )}
+                </div>
+                <div className="p-6">
+                  <time className="text-xs font-medium text-ink-muted">
+                    {article.date}
+                  </time>
+                  <h3 className="mt-2 line-clamp-2 text-base font-bold leading-snug">
+                    {article.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-2 text-sm text-ink-muted">
+                    {article.excerpt}
+                  </p>
+                </div>
+              </Link>
+              {/^(https?):\/\//.test(article.href) && (
+                <a
+                  href={article.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mx-6 mb-5 inline-flex text-sm font-semibold text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+                >
+                  원문 출처 보기 ↗
+                </a>
+              )}
+            </div>
           </ScrollReveal>
         ))}
       </div>

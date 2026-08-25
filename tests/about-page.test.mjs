@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { AboutNews } from "../src/components/about-news.tsx";
 
 const typesPath = new URL("../src/lib/types.ts", import.meta.url);
 const sheetsPath = new URL("../src/lib/sheets.ts", import.meta.url);
@@ -82,12 +85,50 @@ test("header navigation reaches the about page", async () => {
   assert.doesNotMatch(header, /href="\/#research"/);
 });
 
-test("about news starts with three items and expands accessibly", async () => {
+test("about news includes every item in server HTML and enhances accessibly", async () => {
   const news = await readFile(newsPath, "utf8");
+  const items = Array.from({ length: 6 }, (_, index) => ({
+    id: `news-${index + 1}`,
+    date: `2026-08-${String(index + 1).padStart(2, "0")}`,
+    title: `뉴스 ${index + 1}`,
+    excerpt: `소식 ${index + 1}`,
+    href: `https://example.com/news/${index + 1}`,
+    order: index + 1,
+  }));
+  const html = renderToStaticMarkup(createElement(AboutNews, { items }));
+
+  for (const item of items) {
+    assert.match(html, new RegExp(item.title));
+    assert.match(html, new RegExp(item.href));
+  }
+
+  assert.doesNotMatch(html, / hidden=""/);
+  assert.match(html, /id="about-news-list"/);
+  assert.match(html, /aria-expanded="true"/);
+  assert.match(html, /aria-controls="about-news-list"/);
   assert.match(news, /^"use client"/);
-  assert.match(news, /slice\(0, 3\)/);
-  assert.match(news, /aria-expanded=\{expanded\}/);
+  assert.match(news, /useSyncExternalStore/);
+  assert.doesNotMatch(news, /slice\(0, 3\)|visibleItems/);
   assert.match(news, /전체 기사 보기/);
   assert.match(news, /기사 접기/);
   assert.match(news, /noopener noreferrer/);
+});
+
+test("about news omits the disclosure for empty and short lists", () => {
+  const emptyHtml = renderToStaticMarkup(createElement(AboutNews, { items: [] }));
+  const shortItems = Array.from({ length: 3 }, (_, index) => ({
+    id: `short-${index + 1}`,
+    date: "2026-08-21",
+    title: `짧은 소식 ${index + 1}`,
+    excerpt: "",
+    href: `https://example.com/short/${index + 1}`,
+    order: index + 1,
+  }));
+  const shortHtml = renderToStaticMarkup(
+    createElement(AboutNews, { items: shortItems }),
+  );
+
+  assert.doesNotMatch(emptyHtml, /<button/);
+  assert.doesNotMatch(shortHtml, /<button/);
+  for (const item of shortItems) assert.match(shortHtml, new RegExp(item.title));
 });

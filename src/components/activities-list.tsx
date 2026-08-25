@@ -1,87 +1,94 @@
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import type { Activity, ActivityCategory } from "@/lib/types";
-
-const CATEGORIES: { key: ActivityCategory; label: string }[] = [
-  { key: "project", label: "연구 과제" },
-  { key: "award", label: "수상내역" },
-  { key: "academic-award", label: "학회수상" },
-  { key: "external", label: "대외" },
-];
+import { ACTIVITY_SECTIONS } from "@/data/site-navigation";
+import type { Activity } from "@/lib/types";
+import Link from "next/link";
 
 export function ActivitiesList({ activities }: { activities: Activity[] }) {
-  const [active, setActive] = useState<ActivityCategory>("project");
-  const [minHeight, setMinHeight] = useState<number | null>(null);
-  const ulRef = useRef<HTMLUListElement>(null);
-  const heightsRef = useRef<Record<ActivityCategory, number>>({
-    project: 0,
-    award: 0,
-    "academic-award": 0,
-    external: 0,
-  });
-
-  const filtered = activities.filter((activity) => activity.category === active);
-
-  useEffect(() => {
-    if (ulRef.current) {
-      const height = ulRef.current.scrollHeight;
-      heightsRef.current[active] = height;
-      const maxHeight = Math.max(...Object.values(heightsRef.current));
-      setMinHeight(maxHeight);
-    }
-  }, [active]);
-
   return (
     <div>
-      <div className="flex flex-wrap gap-2 border-b border-hairline pb-5">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c.key}
-            type="button"
-            onClick={() => setActive(c.key)}
-            className={`rounded-full px-4 py-2 text-[20px] font-semibold transition-colors ${
-              active === c.key
-                ? "bg-ink text-paper"
-                : "text-ink-muted hover:text-ink"
-            }`}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
-
-      <ul
-        ref={ulRef}
-        className="mt-2 divide-y divide-hairline transition-all duration-300"
-        style={{ minHeight: minHeight ? `${minHeight}px` : undefined }}
+      <nav
+        aria-label="활동 분류"
+        className="flex flex-wrap gap-2 border-b border-hairline pb-5"
       >
-        {filtered.map((activity) => (
-          <li key={activity.id} className="py-5">
-            {activity.href ? (
-              <a
-                href={activity.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[22px] font-bold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
-              >
-                {activity.title}
-              </a>
-            ) : (
-              <p className="text-[22px] font-bold">{activity.title}</p>
-            )}
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[20px] text-ink-muted">
-              {activity.org && <span>{activity.org}</span>}
-              {activity.tag && (
-                <span className="rounded-full border border-hairline px-2.5 py-0.5 text-[17px] font-medium text-axis-ai">
-                  {activity.tag}
-                </span>
-              )}
-              <span className="text-[17px]">{activity.period}</span>
-            </div>
-          </li>
+        {ACTIVITY_SECTIONS.map((section) => (
+          <a
+            key={section.key}
+            href={`#${section.key}`}
+            className="rounded-full border border-hairline px-4 py-2 text-[20px] font-semibold text-ink-muted transition-colors hover:bg-ink hover:text-paper"
+          >
+            {section.label}
+          </a>
         ))}
-      </ul>
+      </nav>
+
+      <div className="divide-y divide-hairline">
+        {ACTIVITY_SECTIONS.map((section) => {
+          const items = activities.filter(
+            (activity) => activity.category === section.key,
+          );
+
+          return (
+            <section
+              key={section.key}
+              id={section.key}
+              className="scroll-mt-28 py-12"
+            >
+              <h2 className="text-[28px] font-black tracking-tight">
+                {section.label}
+              </h2>
+              {items.length > 0 ? (
+                <ul className="mt-4 divide-y divide-hairline">
+                  {items.map((activity) => (
+                    <li key={activity.id} className="py-5">
+                      {activity.category === "project" ? (
+                        <Link
+                          href={`/projects/${activity.id}`}
+                          className="text-[22px] font-bold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
+                        >
+                          {activity.title}
+                        </Link>
+                      ) : activity.href ? (
+                        <a
+                          href={activity.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[22px] font-bold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
+                        >
+                          {activity.title}
+                        </a>
+                      ) : (
+                        <p className="text-[22px] font-bold">{activity.title}</p>
+                      )}
+                      {activity.category === "project" && /^https?:\/\//.test(activity.href ?? "") && (
+                        <a
+                          href={activity.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ml-3 text-sm font-semibold text-ink-muted underline underline-offset-4 transition-colors hover:text-ink"
+                        >
+                          원문 출처 ↗
+                        </a>
+                      )}
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[20px] text-ink-muted">
+                        {activity.org && <span>{activity.org}</span>}
+                        {activity.tag && (
+                          <span className="rounded-full border border-hairline px-2.5 py-0.5 text-[17px] font-medium text-axis-ai">
+                            {activity.tag}
+                          </span>
+                        )}
+                        <span className="text-[17px]">{activity.period}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-4 text-[17px] text-ink-muted">
+                  등록된 활동이 없습니다.
+                </p>
+              )}
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

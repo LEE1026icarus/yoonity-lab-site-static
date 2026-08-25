@@ -3,11 +3,10 @@ import { getPublications } from "@/lib/sheets";
 import { PublicationsList } from "@/components/publications-list";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { PAGE_METADATA } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
-export const metadata: Metadata = {
-  title: "출판 — yoonity",
-  description: "Yoonity 연구실의 해외/국내 논문, 도서, 특허",
-};
+export const metadata: Metadata = PAGE_METADATA["/publications"];
 
 export const revalidate = 60;
 
@@ -17,6 +16,7 @@ export default async function PublicationsPage() {
   return (
     <>
       <main className="mx-auto max-w-4xl flex-1 px-6 py-32">
+        <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "논문·도서·특허", href: "/publications" }]} />
         <ScrollReveal>
           <p className="text-[20px] font-semibold text-ink-muted">출판</p>
           <h1 className="mt-3 text-[54px] font-black tracking-tight">

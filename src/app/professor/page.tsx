@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { getProfessor } from "@/lib/sheets";
 import { Timeline } from "@/components/timeline";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
+import { PAGE_METADATA } from "@/lib/seo";
+import { createProfessorStructuredData } from "@/lib/structured-data";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
-export const metadata: Metadata = {
-  title: "지도교수 — yoonity",
-  description: "Yoonity 연구실 지도교수 소개",
-};
+export const metadata: Metadata = PAGE_METADATA["/professor"];
 
 export const revalidate = 60;
 
@@ -17,7 +19,9 @@ export default async function ProfessorPage() {
 
   return (
     <>
+      <JsonLd data={createProfessorStructuredData(p)} />
       <main className="mx-auto max-w-4xl flex-1 px-6 py-32">
+      <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "지도교수", href: "/professor" }]} />
       <ScrollReveal>
         <p className="text-[20px] font-semibold text-ink-muted">지도교수</p>
 
@@ -74,6 +78,12 @@ export default async function ProfessorPage() {
               </li>
             ))}
           </ul>
+          <Link
+            href="/publications"
+            className="mt-7 inline-flex text-sm font-semibold transition-opacity hover:opacity-65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+          >
+            논문·도서·특허에서 연구성과 보기 →
+          </Link>
         </section>
       </ScrollReveal>
 

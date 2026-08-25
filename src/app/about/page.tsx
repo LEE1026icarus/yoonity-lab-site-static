@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AboutNews } from "@/components/about-news";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
 import { siteCopy } from "@/data/site-copy";
 import { getAboutPageData } from "@/lib/sheets";
+import { PAGE_METADATA } from "@/lib/seo";
+import { createAboutPageStructuredData } from "@/lib/structured-data";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
-export const metadata: Metadata = {
-  title: "연구실 소개 — Yoonity",
-  description:
-    "Yoonity 연구실의 연구, 대학원생 모집, 산학협력, 자료와 소식을 소개합니다.",
-};
+export const metadata: Metadata = PAGE_METADATA["/about"];
 
 export const revalidate = 60;
 
@@ -20,7 +21,9 @@ export default async function AboutPage() {
 
   return (
     <>
+      <JsonLd data={createAboutPageStructuredData()} />
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-32">
+        <Breadcrumbs items={[{ label: "홈", href: "/" }, { label: "연구실 소개", href: "/about" }]} />
         <ScrollReveal>
           <section>
             <p className="text-sm font-semibold text-ink-muted">연구실 소개</p>
@@ -30,6 +33,12 @@ export default async function AboutPage() {
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
               {siteCopy.brand.description}
             </p>
+            <Link
+              href="/publications"
+              className="mt-6 inline-flex text-sm font-semibold transition-opacity hover:opacity-65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+            >
+              논문·도서·특허로 연구성과 보기 →
+            </Link>
           </section>
         </ScrollReveal>
 
@@ -42,14 +51,22 @@ export default async function AboutPage() {
             <p className="mt-4 max-w-2xl leading-relaxed text-ink-muted">
               대학원생과 학부연구생은 산업과 사회의 문제를 데이터, AI, 정보시스템 연구로 구체화하며 함께 성장합니다.
             </p>
-            <a
-              href={data.recruitmentHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 inline-flex rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
-            >
-              {siteCopy.home.secondaryCta}
-            </a>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href={data.recruitmentHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+              >
+                {siteCopy.home.secondaryCta}
+              </a>
+              <Link
+                href="/researchers"
+                className="px-3 py-3 text-sm font-semibold text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+              >
+                현재 연구진과 졸업생 보기
+              </Link>
+            </div>
           </section>
         </ScrollReveal>
 
@@ -92,6 +109,12 @@ export default async function AboutPage() {
               >
                 {siteCopy.home.emailCta}
               </a>
+              <Link
+                href="/activities"
+                className="px-3 py-3 text-sm font-semibold text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+              >
+                연구과제·수상·대외활동 보기
+              </Link>
             </div>
           </section>
         </ScrollReveal>

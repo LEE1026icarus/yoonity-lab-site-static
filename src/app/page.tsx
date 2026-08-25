@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ResearchAxes } from "@/components/research-axes";
 import { ProcessSteps } from "@/components/process-steps";
 import { RelatedArticles } from "@/components/related-articles";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
 import { siteCopy } from "@/data/site-copy";
+import { PAGE_METADATA } from "@/lib/seo";
+import { createOrganizationStructuredData } from "@/lib/structured-data";
+
+export const metadata: Metadata = PAGE_METADATA["/"];
 
 export const revalidate = 60;
 
@@ -12,6 +18,7 @@ export default function Home() {
 
   return (
     <>
+      <JsonLd data={createOrganizationStructuredData()} />
       <main id="top" className="flex-1">
         <section className="flex min-h-[85vh] items-center">
           <div className="mx-auto max-w-6xl px-6 py-32">

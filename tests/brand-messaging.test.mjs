@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { HOME_TITLE } from "../src/lib/seo.ts";
 
 const copyPath = new URL("../src/data/site-copy.ts", import.meta.url);
 const homePath = new URL("../src/app/page.tsx", import.meta.url);
@@ -37,7 +38,8 @@ test("shared pages use one collaboration-first message and contact", async () =>
     readFile(headerPath, "utf8"),
     readFile(footerPath, "utf8"),
   ]);
-  assert.match(layout, /산업 문제 해결형 AI 연구실/);
+  assert.match(HOME_TITLE, /산업 문제 해결형 AI 연구실/);
+  assert.match(layout, /HOME_TITLE/);
   assert.match(about, /siteCopy\.brand\.headline/);
   assert.match(about, /siteCopy\.home\.emailCta/);
   assert.doesNotMatch(about, /siteCopy\.home\.meetingCta/);
