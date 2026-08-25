@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ResearchAxes } from "@/components/research-axes";
 import { ProcessSteps } from "@/components/process-steps";
-import { RelatedArticles } from "@/components/related-articles";
 import { SiteFooter } from "@/components/site-footer";
 import { JsonLd } from "@/components/json-ld";
 import { siteCopy } from "@/data/site-copy";
@@ -83,7 +82,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <RelatedArticles />
       </main>
       <SiteFooter />
     </>

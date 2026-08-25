@@ -10,6 +10,7 @@ export function SiteFooter() {
         <div>
           <p className="font-black text-ink">yoonity</p>
           <p className="mt-1">동국대학교 경영정보학과 Yoonity 연구실</p>
+          <p className="mt-1">위치: 서울특별시 중구 필동로1길 30 L510</p>
         </div>
         <nav
           aria-label="주요 페이지"

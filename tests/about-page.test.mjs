@@ -85,6 +85,18 @@ test("header navigation reaches the about page", async () => {
   assert.doesNotMatch(header, /href="\/#research"/);
 });
 
+test("header exposes the AQMRI institute link in both navigation menus", async () => {
+  const header = await readFile(headerPath, "utf8");
+
+  assert.equal((header.match(/AQMRI 연구소/g) ?? []).length, 2);
+  assert.equal((header.match(/href="https:\/\/aqmri\.co\.kr\/"/g) ?? []).length, 2);
+  assert.equal((header.match(/target="_blank"/g) ?? []).length, 2);
+  assert.equal((header.match(/rel="noopener noreferrer"/g) ?? []).length, 2);
+  assert.match(header, /ArrowUpRightIcon/);
+  assert.match(header, /border-l border-hairline/);
+  assert.equal((header.match(/bg-axis-quantum/g) ?? []).length, 2);
+});
+
 test("about news includes every item in server HTML and enhances accessibly", async () => {
   const news = await readFile(newsPath, "utf8");
   const items = Array.from({ length: 6 }, (_, index) => ({

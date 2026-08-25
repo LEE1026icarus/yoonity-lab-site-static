@@ -38,6 +38,7 @@ test("footer exposes every major page through crawlable links", async () => {
   }
 
   assert.match(footer, /<nav[^>]+aria-label="주요 페이지"/);
+  assert.match(footer, /위치: 서울특별시 중구 필동로1길 30 L510/);
   assert.doesNotMatch(footer, /href=""/);
 });
 

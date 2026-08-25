@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDownIcon } from "lucide-react";
+import { ArrowUpRightIcon, ChevronDownIcon } from "lucide-react";
 import { MAIN_NAV_LINKS, SUBMENU_LINKS } from "@/data/site-navigation";
 
 export function SiteHeader() {
@@ -96,10 +96,23 @@ export function SiteHeader() {
             ))}
             <Link
               href="/about"
-              className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper transition-opacity hover:opacity-80"
+              className="transition-colors hover:text-ink"
             >
               연구실 소개
             </Link>
+            <a
+              href="https://aqmri.co.kr/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-1 flex items-center gap-2 border-l border-hairline pl-5 font-semibold text-ink transition-colors hover:text-axis-quantum"
+            >
+              <span
+                aria-hidden="true"
+                className="size-1.5 rounded-full bg-axis-quantum shadow-[0_0_12px_rgba(47,217,200,0.7)]"
+              />
+              AQMRI 연구소
+              <ArrowUpRightIcon aria-hidden="true" className="size-3.5" />
+            </a>
           </nav>
 
           <button
@@ -180,10 +193,21 @@ export function SiteHeader() {
               <Link
                 href="/about"
                 onClick={() => setMenuOpen(false)}
-                className="mt-2 w-fit rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper"
+                className="mt-2 block py-2 text-sm text-ink transition-colors hover:text-axis-quantum"
               >
                 연구실 소개
               </Link>
+              <a
+                href="https://aqmri.co.kr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="flex w-fit items-center gap-2 border-l border-hairline py-2 pl-4 text-sm font-semibold text-ink transition-colors hover:text-axis-quantum"
+              >
+                <span aria-hidden="true" className="size-1.5 rounded-full bg-axis-quantum" />
+                AQMRI 연구소
+                <ArrowUpRightIcon aria-hidden="true" className="size-3.5" />
+              </a>
             </div>
           </motion.nav>
         )}

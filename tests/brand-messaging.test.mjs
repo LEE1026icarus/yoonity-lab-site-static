@@ -92,5 +92,6 @@ test("home leads with collaboration and keeps recruitment secondary", async () =
   assert.match(home, /siteCopy\.home\.collaborationTitle/);
   assert.doesNotMatch(home, /siteCopy\.home\.meetingCta/);
   assert.doesNotMatch(home, /siteCopy\.contact\.meetingSubject/);
+  assert.doesNotMatch(home, /RelatedArticles/);
   assert.ok(home.indexOf("primaryCta") < home.indexOf("secondaryCta"));
 });
