@@ -142,6 +142,35 @@ const toOrder = (value: string, fallback: number) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+function safeChannelUrl(value: string | undefined) {
+  const candidate = value?.trim();
+  if (!candidate) return undefined;
+
+  try {
+    const url = new URL(candidate);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function channelHref(row: Record<string, string>) {
+  const href = safeChannelUrl(row.href);
+  if (href) return href;
+
+  // Keep channel links resilient to the current sheet rows, where the URL was
+  // entered in the status column instead of href.
+  const status = row.status?.trim();
+  const statusUrl = safeChannelUrl(status);
+  if (statusUrl) return statusUrl;
+  if (row.id?.trim().toLowerCase() === "blog" && /@naver\.com$/i.test(status)) {
+    return `https://blog.naver.com/${status.split("@")[0]}`;
+  }
+  return undefined;
+}
+
 export async function getAboutPageData(): Promise<AboutPageData> {
   const [settingsRows, resourceRows, channelRows, newsRows] = await Promise.all([
     fetchSheetRows("about_settings"),
@@ -165,11 +194,12 @@ export async function getAboutPageData(): Promise<AboutPageData> {
 
   const channels = channelRows
     .map<AboutChannel>((row, index) => {
-      const active = row.status === "active" && Boolean(row.href);
+      const href = channelHref(row);
+      const active = Boolean(href);
       return {
         id: row.id,
         title: row.title,
-        href: active ? row.href : undefined,
+        href: active ? href : undefined,
         status: active ? "active" : "coming-soon",
         order: toOrder(row.order, index + 1),
       };
