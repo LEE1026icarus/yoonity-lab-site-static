@@ -17,8 +17,10 @@ import {
   PUBLICATION_SECTIONS,
   RESEARCHER_SECTIONS,
 } from "../src/data/site-navigation.ts";
+import nextConfigModule from "../next.config.ts";
 
 const openGraphImagePath = new URL("../src/app/opengraph-image.tsx", import.meta.url);
+const nextConfig = nextConfigModule.default ?? nextConfigModule;
 
 test("site URL prefers the explicit canonical domain and normalizes its path", () => {
   const url = resolveSiteUrl({
@@ -39,6 +41,21 @@ test("site URL uses Vercel's production domain when no custom domain is configur
 
 test("site URL uses localhost only outside a configured deployment", () => {
   assert.equal(resolveSiteUrl({}).href, "http://localhost:3000/");
+});
+
+test("legacy production hosts permanently redirect to the canonical domain", async () => {
+  const redirects = await nextConfig.redirects?.();
+
+  assert.deepEqual(redirects, [
+    "yoonity.kr",
+    "yoonity-lab-site-static.vercel.app",
+    "yoonity-lab-site-static-lee1026icarus-projects.vercel.app",
+  ].map((host) => ({
+    source: "/:path*",
+    has: [{ type: "host", value: host }],
+    destination: "https://www.yoonity.kr/:path*",
+    permanent: true,
+  })));
 });
 
 test("robots advertises the canonical sitemap without blocking public routes", () => {
