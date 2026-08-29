@@ -1,15 +1,13 @@
 import type {
   Activity,
-  AboutChannel,
-  AboutNewsItem,
   AboutPageData,
-  AboutResource,
   Article,
   Member,
   Professor,
   Publication,
   TimelineEntry,
 } from "./types";
+import { normalizeAboutPageData } from "./about-data";
 import { mockArticles } from "@/data/mock-articles";
 import { professor as mockProfessor } from "@/data/mock-professor";
 import { mockActivities } from "@/data/mock-activities";
@@ -136,41 +134,6 @@ export async function updatePublicationHref(
   return success;
 }
 
-const isVisible = (value: string) => value.toUpperCase() !== "FALSE";
-const toOrder = (value: string, fallback: number) => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : fallback;
-};
-
-function safeChannelUrl(value: string | undefined) {
-  const candidate = value?.trim();
-  if (!candidate) return undefined;
-
-  try {
-    const url = new URL(candidate);
-    return url.protocol === "http:" || url.protocol === "https:"
-      ? url.toString()
-      : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-function channelHref(row: Record<string, string>) {
-  const href = safeChannelUrl(row.href);
-  if (href) return href;
-
-  // Keep channel links resilient to the current sheet rows, where the URL was
-  // entered in the status column instead of href.
-  const status = row.status?.trim();
-  const statusUrl = safeChannelUrl(status);
-  if (statusUrl) return statusUrl;
-  if (row.id?.trim().toLowerCase() === "blog" && /@naver\.com$/i.test(status)) {
-    return `https://blog.naver.com/${status.split("@")[0]}`;
-  }
-  return undefined;
-}
-
 export async function getAboutPageData(): Promise<AboutPageData> {
   const [settingsRows, resourceRows, channelRows, newsRows] = await Promise.all([
     fetchSheetRows("about_settings"),
@@ -179,57 +142,13 @@ export async function getAboutPageData(): Promise<AboutPageData> {
     fetchSheetRows("about_news"),
   ]);
 
-  const settings = new Map(settingsRows.map((row) => [row.key, row.value]));
-  const resources = resourceRows
-    .filter((row) => isVisible(row.visible || "TRUE"))
-    .map<AboutResource>((row, index) => ({
-      id: row.id,
-      title: row.title,
-      description: row.description || "",
-      href: row.href,
-      order: toOrder(row.order, index + 1),
-    }))
-    .filter((resource) => resource.id && resource.title && resource.href)
-    .sort((a, b) => a.order - b.order);
-
-  const channels = channelRows
-    .map<AboutChannel>((row, index) => {
-      const href = channelHref(row);
-      const active = Boolean(href);
-      return {
-        id: row.id,
-        title: row.title,
-        href: active ? href : undefined,
-        status: active ? "active" : "coming-soon",
-        order: toOrder(row.order, index + 1),
-      };
-    })
-    .filter((channel) => channel.id && channel.title)
-    .sort((a, b) => a.order - b.order);
-
-  const news = newsRows
-    .filter((row) => isVisible(row.visible || "TRUE"))
-    .map<AboutNewsItem>((row, index) => ({
-      id: row.id,
-      date: row.date,
-      title: row.title,
-      excerpt: row.excerpt || "",
-      href: row.href,
-      order: toOrder(row.order, index + 1),
-    }))
-    .filter((item) => item.id && item.date && item.title && item.href)
-    .sort(
-      (a, b) =>
-        b.date.localeCompare(a.date) || a.order - b.order || a.id.localeCompare(b.id),
-    );
-
-  return {
-    collaborationEmail:
-      settings.get("collaboration_email") || mockAboutPageData.collaborationEmail,
-    recruitmentHref:
-      settings.get("recruitment_href") || mockAboutPageData.recruitmentHref,
-    resources: resources.length ? resources : mockAboutPageData.resources,
-    channels: channels.length ? channels : mockAboutPageData.channels,
-    news: news.length ? news : mockAboutPageData.news,
-  };
+  return normalizeAboutPageData(
+    {
+      settings: settingsRows,
+      resources: resourceRows,
+      channels: channelRows,
+      news: newsRows,
+    },
+    mockAboutPageData,
+  );
 }

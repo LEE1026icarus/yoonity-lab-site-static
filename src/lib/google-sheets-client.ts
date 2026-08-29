@@ -4,12 +4,11 @@ const CACHE_TTL_MS = 60_000;
 const cache = new Map<string, { rows: Record<string, string>[]; expires: number }>();
 
 let cachedToken: { value: string; expires: number } | null = null;
+let pendingToken: Promise<string | null> | null = null;
 
 // Manual JWT-bearer OAuth2 flow via plain fetch — avoids the googleapis/gaxios
 // SDK, whose retry-on-clone logic breaks under this Node runtime.
-async function getAccessToken(): Promise<string | null> {
-  if (cachedToken && cachedToken.expires > Date.now()) return cachedToken.value;
-
+async function requestAccessToken(): Promise<string | null> {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
   if (!email || !privateKey) return null;
@@ -42,6 +41,18 @@ async function getAccessToken(): Promise<string | null> {
     expires: Date.now() + (data.expires_in - 60) * 1000,
   };
   return data.access_token;
+}
+
+async function getAccessToken(): Promise<string | null> {
+  if (cachedToken && cachedToken.expires > Date.now()) return cachedToken.value;
+  pendingToken ??= requestAccessToken();
+  const request = pendingToken;
+
+  try {
+    return await request;
+  } finally {
+    if (pendingToken === request) pendingToken = null;
+  }
 }
 
 // Returns [] when the sheet isn't configured, unreachable, or has no data rows yet —

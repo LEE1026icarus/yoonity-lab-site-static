@@ -7,15 +7,17 @@ import { AboutNews } from "../src/components/about-news.tsx";
 
 const typesPath = new URL("../src/lib/types.ts", import.meta.url);
 const sheetsPath = new URL("../src/lib/sheets.ts", import.meta.url);
+const aboutDataPath = new URL("../src/lib/about-data.ts", import.meta.url);
 const mockPath = new URL("../src/data/mock-about.ts", import.meta.url);
 const newsPath = new URL("../src/components/about-news.tsx", import.meta.url);
 const pagePath = new URL("../src/app/about/page.tsx", import.meta.url);
 const headerPath = new URL("../src/components/site-header.tsx", import.meta.url);
 
 test("about data has typed sheet sources and local fallbacks", async () => {
-  const [types, sheets, mock] = await Promise.all([
+  const [types, sheets, aboutData, mock] = await Promise.all([
     readFile(typesPath, "utf8"),
     readFile(sheetsPath, "utf8"),
+    readFile(aboutDataPath, "utf8"),
     readFile(mockPath, "utf8"),
   ]);
 
@@ -37,11 +39,11 @@ test("about data has typed sheet sources and local fallbacks", async () => {
     assert.match(sheets, new RegExp(`fetchSheetRows\\(\"${tab}\"\\)`));
   }
 
-  assert.match(sheets, /filter\(\(resource\) => resource\.id && resource\.title && resource\.href\)/);
-  assert.match(sheets, /filter\(\(item\) => item\.id && item\.date && item\.title && item\.href\)/);
-  assert.match(sheets, /channelHref/);
-  assert.match(sheets, /safeChannelUrl/);
-  assert.match(sheets, /url\.protocol === "http:" \|\| url\.protocol === "https:"/);
+  assert.match(sheets, /normalizeAboutPageData/);
+  assert.match(aboutData, /toExternalHref/);
+  assert.match(aboutData, /toCalendarDate/);
+  assert.match(aboutData, /channelHref/);
+  assert.match(aboutData, /url\.protocol === "http:" \|\| url\.protocol === "https:"/);
   assert.match(mock, /yoonity25@gmail\.com/);
 });
 
