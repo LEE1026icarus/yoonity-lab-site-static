@@ -3,7 +3,12 @@ import { pretendard } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
 import { BackgroundScene } from "@/components/background-scene";
 import { siteUrl } from "@/lib/site";
-import { HOME_DESCRIPTION, HOME_TITLE, PAGE_METADATA } from "@/lib/seo";
+import {
+  GOOGLE_SITE_VERIFICATION,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  PAGE_METADATA,
+} from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -13,6 +18,9 @@ export const metadata: Metadata = {
     template: "%s | Yoonity Lab",
   },
   description: HOME_DESCRIPTION,
+  verification: {
+    google: GOOGLE_SITE_VERIFICATION,
+  },
   openGraph: PAGE_METADATA["/"].openGraph,
   twitter: PAGE_METADATA["/"].twitter,
 };

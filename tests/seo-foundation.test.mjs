@@ -10,6 +10,7 @@ import {
 import {
   createRobotsConfig,
   createSitemapEntries,
+  GOOGLE_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "../src/lib/seo.ts";
 import {
@@ -168,6 +169,13 @@ test("every page has route-consistent Open Graph and Twitter metadata", () => {
     PAGE_METADATA["/about"].openGraph.title.match(/Yoonity Lab/g)?.length,
     1,
   );
+});
+
+test("root metadata publishes the Google Search Console verification token", async () => {
+  const layout = await readFile(new URL("../src/app/layout.tsx", import.meta.url), "utf8");
+
+  assert.equal(GOOGLE_SITE_VERIFICATION, "-H57TbUoldZv4A5RCmg0eQMi7cCZgESj_Kuf4RB3Ekk");
+  assert.match(layout, /verification:\s*\{\s*google:\s*GOOGLE_SITE_VERIFICATION/);
 });
 
 test("detail route metadata and links use crawlable internal paths", async () => {
