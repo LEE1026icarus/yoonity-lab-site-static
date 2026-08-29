@@ -39,6 +39,9 @@ test("about data has typed sheet sources and local fallbacks", async () => {
 
   assert.match(sheets, /filter\(\(resource\) => resource\.id && resource\.title && resource\.href\)/);
   assert.match(sheets, /filter\(\(item\) => item\.id && item\.date && item\.title && item\.href\)/);
+  assert.match(sheets, /channelHref/);
+  assert.match(sheets, /safeChannelUrl/);
+  assert.match(sheets, /url\.protocol === "http:" \|\| url\.protocol === "https:"/);
   assert.match(mock, /yoonity25@gmail\.com/);
 });
 
@@ -63,6 +66,9 @@ test("about page renders the agreed sections in order", async () => {
   assert.match(page, /mailto:/);
   assert.match(page, /target="_blank"/);
   assert.match(page, /noopener noreferrer/);
+  assert.match(page, /channelIcon/);
+  assert.match(page, /\/images\/channels\/blog\.png/);
+  assert.match(page, /\/images\/channels\/github\.png/);
   assert.match(page, /<SiteFooter/);
 });
 

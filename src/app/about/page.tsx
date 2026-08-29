@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { AboutNews } from "@/components/about-news";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -15,6 +16,15 @@ export const metadata: Metadata = PAGE_METADATA["/about"];
 export const revalidate = 60;
 
 const sectionClass = "border-t border-hairline py-20 md:py-24";
+
+function channelIcon(id: string, title: string) {
+  const key = `${id} ${title}`.toLowerCase();
+  if (key.includes("github")) return "/images/channels/github.png";
+  if (key.includes("blog") || key.includes("naver") || key.includes("블로그")) {
+    return "/images/channels/blog.png";
+  }
+  return null;
+}
 
 export default async function AboutPage() {
   const data = await getAboutPageData();
@@ -131,9 +141,23 @@ export default async function AboutPage() {
                     href={channel.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-2xl border border-hairline bg-paper-raised p-6 font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
+                    className="group flex items-center justify-between rounded-2xl border border-hairline bg-paper-raised p-6 font-bold transition-transform hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-axis-ai"
                   >
-                    {channel.title}
+                    <span className="flex items-center gap-3">
+                      {channelIcon(channel.id, channel.title) ? (
+                        <Image
+                          src={channelIcon(channel.id, channel.title)!}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="size-12 rounded-xl object-cover"
+                        />
+                      ) : null}
+                      {channel.title}
+                    </span>
+                    <span aria-hidden="true" className="text-ink-muted transition-transform group-hover:translate-x-1">
+                      ↗
+                    </span>
                   </a>
                 ) : (
                   <div
@@ -141,7 +165,18 @@ export default async function AboutPage() {
                     aria-disabled="true"
                     className="rounded-2xl border border-hairline bg-paper-raised p-6"
                   >
-                    <p className="font-bold">{channel.title}</p>
+                    <p className="flex items-center gap-3 font-bold">
+                      {channelIcon(channel.id, channel.title) ? (
+                        <Image
+                          src={channelIcon(channel.id, channel.title)!}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="size-12 rounded-xl object-cover"
+                        />
+                      ) : null}
+                      {channel.title}
+                    </p>
                     <p className="mt-2 text-sm text-ink-muted">준비 중</p>
                   </div>
                 ),
