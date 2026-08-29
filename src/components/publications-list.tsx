@@ -3,6 +3,13 @@ import type { Publication } from "@/lib/types";
 import Link from "next/link";
 
 export function PublicationsList({ publications }: { publications: Publication[] }) {
+  const itemCounts = new Map(
+    PUBLICATION_SECTIONS.map((section) => [
+      section.key,
+      publications.filter((publication) => publication.category === section.key).length,
+    ]),
+  );
+
   return (
     <div>
       <nav
@@ -13,9 +20,16 @@ export function PublicationsList({ publications }: { publications: Publication[]
           <a
             key={section.key}
             href={`#${section.key}`}
-            className="rounded-full border border-hairline px-4 py-2 text-[20px] font-semibold text-ink-muted transition-colors hover:bg-ink hover:text-paper"
+            aria-label={`${section.label} (${itemCounts.get(section.key) ?? 0}개)`}
+            className="inline-flex items-center gap-2 rounded-full border border-hairline px-4 py-2 text-[20px] font-semibold text-ink-muted transition-colors hover:bg-ink hover:text-paper"
           >
             {section.label}
+            <span
+              aria-hidden="true"
+              className="text-[16px] tabular-nums text-ink-muted"
+            >
+              {itemCounts.get(section.key) ?? 0}
+            </span>
           </a>
         ))}
       </nav>
