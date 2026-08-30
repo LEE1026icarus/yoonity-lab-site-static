@@ -13,6 +13,7 @@ import {
   GOOGLE_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "../src/lib/seo.ts";
+import { getGoogleTagManagerContainerId } from "../src/lib/analytics.ts";
 import {
   ACTIVITY_SECTIONS,
   PUBLICATION_SECTIONS,
@@ -42,6 +43,22 @@ test("site URL uses Vercel's production domain when no custom domain is configur
 
 test("site URL uses localhost only outside a configured deployment", () => {
   assert.equal(resolveSiteUrl({}).href, "http://localhost:3000/");
+});
+
+test("Google Tag Manager accepts only a valid container ID", () => {
+  assert.equal(
+    getGoogleTagManagerContainerId({
+      NEXT_PUBLIC_GTM_CONTAINER_ID: " GTM-ABC123XYZ ",
+    }),
+    "GTM-ABC123XYZ",
+  );
+  assert.equal(
+    getGoogleTagManagerContainerId({
+      NEXT_PUBLIC_GTM_CONTAINER_ID: "G-ABC123XYZ",
+    }),
+    undefined,
+  );
+  assert.equal(getGoogleTagManagerContainerId({}), undefined);
 });
 
 test("legacy production hosts permanently redirect to the canonical domain", async () => {

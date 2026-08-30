@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { pretendard } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
 import { BackgroundScene } from "@/components/background-scene";
+import { GoogleTagManager } from "@/components/google-tag-manager";
+import { getGoogleTagManagerContainerId } from "@/lib/analytics";
 import { siteUrl } from "@/lib/site";
 import {
   GOOGLE_SITE_VERIFICATION,
@@ -25,6 +27,8 @@ export const metadata: Metadata = {
   twitter: PAGE_METADATA["/"].twitter,
 };
 
+const gtmContainerId = getGoogleTagManagerContainerId();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${pretendard.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-paper text-ink">
+        <GoogleTagManager containerId={gtmContainerId} />
         <BackgroundScene />
         <SiteHeader />
         <div className="relative z-10 flex flex-1 flex-col">{children}</div>
