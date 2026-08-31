@@ -4,6 +4,7 @@ import type {
   AboutPageData,
   AboutResource,
 } from "./types";
+import { safeHttpUrl } from "./safe-url";
 
 type SheetRows = Record<string, string>[];
 
@@ -21,20 +22,6 @@ const toOrder = (value: string, fallback: number) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
-function toExternalHref(value: string): string | null {
-  const href = value.trim();
-  if (!/^https?:\/\/[^/\\?#\s]/i.test(href) || href.includes("\\")) return null;
-
-  try {
-    const url = new URL(href);
-    return (url.protocol === "http:" || url.protocol === "https:") && url.hostname
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
-}
-
 function toCalendarDate(value: string): string | null {
   const date = value.trim();
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
@@ -48,11 +35,11 @@ function toCalendarDate(value: string): string | null {
 }
 
 function channelHref(row: Record<string, string>): string | null {
-  const href = toExternalHref(row.href ?? "");
+  const href = safeHttpUrl(row.href);
   if (href) return href;
 
   const status = row.status?.trim() ?? "";
-  const statusHref = toExternalHref(status);
+  const statusHref = safeHttpUrl(status);
   if (statusHref) return statusHref;
   if (row.id?.trim().toLowerCase() === "blog" && /@naver\.com$/i.test(status)) {
     return `https://blog.naver.com/${status.split("@")[0]}`;
@@ -79,7 +66,7 @@ export function normalizeAboutPageData(
 
   const resources = rows.resources
     .flatMap((row, index): AboutResource[] => {
-      const href = toExternalHref(row.href ?? "");
+      const href = safeHttpUrl(row.href);
       if (!isVisible(row.visible ?? "") || !row.id || !row.title || !href) return [];
       return [{
         id: row.id,
@@ -107,7 +94,7 @@ export function normalizeAboutPageData(
 
   const news = rows.news
     .flatMap((row, index): AboutNewsItem[] => {
-      const href = toExternalHref(row.href ?? "");
+      const href = safeHttpUrl(row.href);
       const date = toCalendarDate(row.date ?? "");
       if (!isVisible(row.visible ?? "") || !row.id || !date || !row.title || !href) return [];
       return [{
@@ -121,7 +108,7 @@ export function normalizeAboutPageData(
     })
     .sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order || a.id.localeCompare(b.id));
 
-  const recruitmentHref = toExternalHref(configuredRecruitmentHref ?? "");
+  const recruitmentHref = safeHttpUrl(configuredRecruitmentHref);
   return {
     collaborationEmail:
       configuredEmail && isEmail(configuredEmail)

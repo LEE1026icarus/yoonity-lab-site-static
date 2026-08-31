@@ -40,10 +40,9 @@ test("about data has typed sheet sources and local fallbacks", async () => {
   }
 
   assert.match(sheets, /normalizeAboutPageData/);
-  assert.match(aboutData, /toExternalHref/);
+  assert.match(aboutData, /safeHttpUrl/);
   assert.match(aboutData, /toCalendarDate/);
   assert.match(aboutData, /channelHref/);
-  assert.match(aboutData, /url\.protocol === "http:" \|\| url\.protocol === "https:"/);
   assert.match(mock, /yoonity25@gmail\.com/);
 });
 

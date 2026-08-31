@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yoonity 런타임 아키텍처</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#121a2e;--line:#33415f;--text:#edf2ff;--muted:#a9b5d1;--blue:#65a9ff;--green:#62d8a6;--orange:#ffbd72;--red:#ff8b9d}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#17264b 0,#0b1020 42%);font:15px/1.45 system-ui,-apple-system,sans-serif;color:var(--text)}
+    main{max-width:1440px;margin:auto;padding:38px 42px 50px}h1{margin:0 0 6px;font-size:30px}p{color:var(--muted);margin:0 0 24px}.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin:0 0 18px}.key{display:flex;align-items:center;gap:7px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block}.primary{background:var(--blue)}.side{background:var(--green)}.boundary{border:1px dashed var(--red);width:18px;height:11px}
+    .canvas{position:relative;min-height:570px;border:1px solid #253452;border-radius:18px;background:rgba(12,18,35,.72);overflow:hidden;padding:30px}.boundary-box{position:absolute;border:1px dashed var(--red);border-radius:14px;pointer-events:none}.browser{left:22px;top:28px;width:420px;height:508px}.runtime{left:462px;top:28px;width:610px;height:508px;border-color:var(--blue)}.external{right:22px;top:28px;width:300px;height:508px;border-color:var(--orange)}.boundary-label{position:absolute;top:-14px;left:15px;background:var(--bg);padding:0 8px;font-size:12px;color:var(--muted)}
+    svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.node{position:absolute;width:170px;min-height:78px;padding:14px 15px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:0 8px 22px #05091466}.node strong{display:block;font-size:15px}.node small{display:block;color:var(--muted);margin-top:5px}.n1{left:54px;top:90px}.n2{left:244px;top:90px}.n3{left:514px;top:90px;border-color:var(--blue)}.n4{left:730px;top:90px;border-color:var(--blue)}.n5{left:514px;top:250px}.n6{left:730px;top:250px}.n7{left:514px;top:410px}.n8{right:52px;top:90px;border-color:var(--orange)}.n9{right:52px;top:250px;border-color:var(--orange)}.n10{right:52px;top:410px;border-color:var(--orange)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.card{padding:18px;border:1px solid #293755;border-radius:14px;background:var(--panel)}.card h2{font-size:15px;margin:0 0 8px}.card p{font-size:13px;margin:0}.tag{display:inline-block;color:var(--blue);font-size:12px;margin-bottom:8px}
+    @media(max-width:900px){main{padding:24px 16px}.canvas{overflow:auto;min-height:600px}.cards{grid-template-columns:1fr}.canvas{min-width:1100px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Yoonity 웹사이트 런타임 아키텍처</h1>
+  <p>Next.js App Router가 콘텐츠 모듈과 선택적 Google Sheets 데이터를 조합해 페이지를 렌더링하고, 브라우저에서 GA4로 사용 이벤트를 전송하는 구조</p>
+  <div class="legend"><span class="key"><i class="dot primary"></i>주요 요청 경로</span><span class="key"><i class="dot side"></i>보조 데이터·관측 경로</span><span class="key"><i class="boundary"></i>신뢰 경계</span></div>
+  <section class="canvas" aria-label="런타임 아키텍처 다이어그램">
+    <div class="boundary-box browser"><span class="boundary-label">사용자 브라우저</span></div>
+    <div class="boundary-box runtime"><span class="boundary-label">Yoonity 애플리케이션 / Vercel 런타임</span></div>
+    <div class="boundary-box external"><span class="boundary-label">외부 서비스</span></div>
+    <svg viewBox="0 0 1360 570" aria-hidden="true">
+      <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#65a9ff"/></marker><marker id="sideArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#62d8a6"/></marker></defs>
+      <path d="M224 130H244" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/><path d="M414 130H514" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/><path d="M684 130H730" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/><path d="M815 168V250" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/><path d="M684 290H730" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/><path d="M815 328V410" stroke="#65a9ff" stroke-width="3" marker-end="url(#arrow)"/>
+      <path d="M600 328V450H1070V290" stroke="#62d8a6" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#sideArrow)"/><path d="M900 290H1070V130" stroke="#62d8a6" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#sideArrow)"/><path d="M224 170V450H1070" stroke="#62d8a6" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#sideArrow)"/>
+    </svg>
+    <div class="node n1"><strong>방문자 브라우저</strong><small>페이지 요청·탐색·이벤트</small></div>
+    <div class="node n2"><strong>Vercel Edge / CDN</strong><small>정적 자산·캐시·HTTPS 진입점</small></div>
+    <div class="node n3"><strong>Next.js App Router</strong><small>라우팅·서버 렌더링·메타데이터</small></div>
+    <div class="node n4"><strong>페이지 엔트리</strong><small>src/app/*/page.tsx</small></div>
+    <div class="node n5"><strong>UI 컴포넌트</strong><small>Header·리스트·상세·프로세스</small></div>
+    <div class="node n6"><strong>콘텐츠·도메인 모듈</strong><small>src/data · src/lib/types.ts</small></div>
+    <div class="node n7"><strong>데이터 접근 계층</strong><small>about-data · sheets · member-publications</small></div>
+    <div class="node n8"><strong>Google Sheets</strong><small>외부 콘텐츠 데이터 소스</small></div>
+    <div class="node n9"><strong>GA4</strong><small>G-T3DL7X73QC 관측 대상</small></div>
+    <div class="node n10"><strong>검색 엔진 크롤러</strong><small>sitemap.xml · robots.txt</small></div>
+  </section>
+  <section class="cards">
+    <article class="card"><span class="tag">주요 요청 경로</span><h2>페이지 응답</h2><p>방문자 → Vercel Edge/CDN → Next.js App Router → 페이지 엔트리 → UI·도메인 모듈 → 렌더링 응답. 대부분의 화면 구성은 저장소의 서버 컴포넌트와 데이터 모듈을 통해 결정됩니다.</p></article>
+    <article class="card"><span class="tag">신뢰 경계</span><h2>경계별 책임</h2><p>브라우저는 신뢰할 수 없는 클라이언트 영역입니다. Vercel 런타임은 서버 코드·환경변수·외부 API 호출을 보호하며, Google Sheets·GA4·검색 엔진은 별도 외부 서비스 경계입니다.</p></article>
+    <article class="card"><span class="tag">실행 근거</span><h2>저장소 매핑</h2><p>라우트는 src/app, 공통 화면은 src/components, 콘텐츠는 src/data, 통합 로직은 src/lib에 위치합니다. SEO 출력은 src/app/sitemap.ts·robots.ts·structured-data.ts가 담당합니다.</p></article>
+  </section>
+</main>
+</body>
+</html>

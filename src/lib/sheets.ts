@@ -14,7 +14,8 @@ import { mockActivities } from "@/data/mock-activities";
 import { mockPublications } from "@/data/mock-publications";
 import { mockMembers } from "@/data/mock-members";
 import { mockAboutPageData } from "@/data/mock-about";
-import { fetchSheetRows, updateSheetCell } from "./google-sheets-client";
+import { fetchSheetRows } from "./google-sheets-client";
+import { safeHttpUrl } from "./safe-url";
 
 export async function getArticles(): Promise<Article[]> {
   const rows = await fetchSheetRows("articles");
@@ -25,8 +26,8 @@ export async function getArticles(): Promise<Article[]> {
     title: r.title,
     excerpt: r.excerpt,
     accent: (r.accent as Article["accent"]) || "ai",
-    href: r.href || "#",
-    thumbnail: r.thumbnail || undefined,
+    href: safeHttpUrl(r.href) || "#",
+    thumbnail: safeHttpUrl(r.thumbnail),
   }));
 }
 
@@ -52,15 +53,17 @@ export async function getProfessor(): Promise<Professor> {
   const links = p.links
     ? p.links.split(";").filter(Boolean).map((pair) => {
         const [label, href] = pair.split("|");
-        return { label, href };
+        const safeHref = safeHttpUrl(href);
+        return safeHref ? { label, href: safeHref } : null;
       })
+      .filter((link): link is { label: string; href: string } => link !== null)
     : [];
 
   return {
     name: p.name,
     title: p.title,
     email: p.email,
-    photo: p.photo || undefined,
+    photo: safeHttpUrl(p.photo),
     links,
     expertise: p.expertise ? p.expertise.split(";").filter(Boolean) : [],
     skills: p.skills ? p.skills.split(";").filter(Boolean) : [],
@@ -80,7 +83,7 @@ export async function getActivities(): Promise<Activity[]> {
     org: r.org || undefined,
     tag: r.tag || undefined,
     period: r.period,
-    href: r.href || undefined,
+    href: safeHttpUrl(r.href),
   }));
 }
 
@@ -92,7 +95,7 @@ export async function getPublications(): Promise<Publication[]> {
     category: r.category as Publication["category"],
     title: r.title,
     meta: r.meta || undefined,
-    href: r.href || undefined,
+    href: safeHttpUrl(r.href),
     authors: r.authors
       ? r.authors.split(";").map((s) => s.trim()).filter(Boolean)
       : undefined,
@@ -110,28 +113,13 @@ export async function getMembers(): Promise<Member[]> {
     affiliation: r.affiliation,
     email: r.email || undefined,
     status: r.status as Member["status"],
-    photo: r.photo || undefined,
+    photo: safeHttpUrl(r.photo),
     researchField: r.researchField
       ? r.researchField.split(";").filter(Boolean)
       : undefined,
     period: r.period || undefined,
     currentAffiliation: r.currentAffiliation || undefined,
   }));
-}
-
-export async function updatePublicationHref(
-  publicationTitle: string,
-  href: string
-): Promise<boolean> {
-  const rows = await fetchSheetRows("publications");
-  if (rows.length === 0) return false;
-
-  const rowIndex = rows.findIndex((r) => r.title === publicationTitle);
-  if (rowIndex === -1) return false;
-
-  const rowNum = rowIndex + 2;
-  const success = await updateSheetCell("publications", `F${rowNum}`, href);
-  return success;
 }
 
 export async function getAboutPageData(): Promise<AboutPageData> {

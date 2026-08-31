@@ -6,6 +6,22 @@ const cache = new Map<string, { rows: Record<string, string>[]; expires: number 
 let cachedToken: { value: string; expires: number } | null = null;
 let pendingToken: Promise<string | null> | null = null;
 
+const REQUEST_TIMEOUT_MS = 8_000;
+
+async function fetchWithTimeout(
+  input: string,
+  init: RequestInit = {},
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 // Manual JWT-bearer OAuth2 flow via plain fetch — avoids the googleapis/gaxios
 // SDK, whose retry-on-clone logic breaks under this Node runtime.
 async function requestAccessToken(): Promise<string | null> {
@@ -16,7 +32,7 @@ async function requestAccessToken(): Promise<string | null> {
   const key = await importPKCS8(privateKey, "RS256");
   const now = Math.floor(Date.now() / 1000);
   const assertion = await new SignJWT({
-    scope: "https://www.googleapis.com/auth/spreadsheets",
+      scope: "https://www.googleapis.com/auth/spreadsheets.readonly",
   })
     .setProtectedHeader({ alg: "RS256" })
     .setIssuer(email)
@@ -25,7 +41,7 @@ async function requestAccessToken(): Promise<string | null> {
     .setExpirationTime(now + 3600)
     .sign(key);
 
-  const res = await fetch("https://oauth2.googleapis.com/token", {
+  const res = await fetchWithTimeout("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -81,7 +97,7 @@ export async function fetchSheetRows(tab: string): Promise<Record<string, string
       "sheets(data(rowData(values(formattedValue,hyperlink,textFormatRuns(format(link))))))";
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?includeGridData=true&ranges=${encodeURIComponent(`${tab}!A:Z`)}&fields=${encodeURIComponent(fields)}`;
     console.log(`[fetchSheetRows] Fetching URL: ${url}`);
-    const res = await fetch(url, {
+    const res = await fetchWithTimeout(url, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) {
@@ -128,38 +144,5 @@ export async function fetchSheetRows(tab: string): Promise<Record<string, string
   } catch (error) {
     console.log(`[fetchSheetRows] Exception for tab: ${tab}:`, error);
     return [];
-  }
-}
-
-export async function updateSheetCell(
-  tab: string,
-  range: string,
-  value: string
-): Promise<boolean> {
-  const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
-  if (!spreadsheetId) return false;
-
-  try {
-    const token = await getAccessToken();
-    if (!token) return false;
-
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`${tab}!${range}`)}?valueInputOption=USER_ENTERED`;
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        values: [[value]],
-      }),
-    });
-
-    if (res.ok) {
-      cache.delete(tab);
-    }
-    return res.ok;
-  } catch {
-    return false;
   }
 }
