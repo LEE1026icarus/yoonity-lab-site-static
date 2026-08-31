@@ -23,8 +23,8 @@
   --color-axis-genai: var(--axis-genai);
   --color-axis-quantum: var(--axis-quantum);
 
-  --font-sans: var(--font-pretendard), "Pretendard Variable", -apple-system,
-    BlinkMacSystemFont, sans-serif;
+  --font-sans: "Pretendard Variable", -apple-system, BlinkMacSystemFont,
+    sans-serif;
 }
 
 * {
