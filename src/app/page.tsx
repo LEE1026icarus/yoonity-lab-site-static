@@ -25,13 +25,17 @@ export default function Home() {
               {siteCopy.brand.category}
             </p>
             <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              AI를 넘어,{" "}
-              <span className="text-axis-quantum">
-                양자가 여는 다음 가능성
+              복잡한 산업의 의사결정에,{" "}
+              <span className="text-axis-ai">
+                새로운 가능성을 엽니다
               </span>
               .
               <br />
-              복잡한 산업의 의사결정 문제를 풀어냅니다.
+              AI와 데이터로 변화를 설계하고{" "}
+              <span className="text-axis-quantum">
+                현실에서 검증합니다
+              </span>
+              .
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
               {siteCopy.brand.description}

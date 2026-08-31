@@ -84,9 +84,6 @@ test("existing records are framed as credibility evidence", async () => {
 
 test("home leads with collaboration and keeps recruitment secondary", async () => {
   const home = await readFile(homePath, "utf8");
-  assert.match(home, /AI를 넘어/);
-  assert.match(home, /양자가 여는 다음 가능성/);
-  assert.match(home, /복잡한 산업의 의사결정 문제를 풀어냅니다/);
   assert.match(home, /siteCopy\.home\.primaryCta/);
   assert.match(home, /siteCopy\.home\.secondaryCta/);
   assert.match(home, /siteCopy\.home\.collaborationTitle/);
