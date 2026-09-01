@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { pretendard } from "./fonts";
 import { SiteHeader } from "@/components/site-header";
 import { BackgroundScene } from "@/components/background-scene";
 import { GoogleTagManager } from "@/components/google-tag-manager";
@@ -11,6 +10,7 @@ import {
   HOME_TITLE,
   PAGE_METADATA,
 } from "@/lib/seo";
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${pretendard.variable} h-full antialiased`}>
+    <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-paper text-ink">
         <GoogleTagManager containerId={gtmContainerId} />
         <BackgroundScene />
