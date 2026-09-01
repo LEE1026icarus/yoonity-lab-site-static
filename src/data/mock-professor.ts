@@ -2,6 +2,7 @@ import type { Professor } from "@/lib/types";
 
 export const professor: Professor = {
   name: "윤상혁",
+  photo: "/images/professor/yoon-sanghyeak.avif",
   title: "동국대학교 경영정보학과 교수 | 데이터사이언티스트 | AI 연구자",
   email: "yoonsh@dgu.ac.kr",
   links: [

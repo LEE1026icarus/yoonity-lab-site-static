@@ -15,7 +15,7 @@ import { mockPublications } from "@/data/mock-publications";
 import { mockMembers } from "@/data/mock-members";
 import { mockAboutPageData } from "@/data/mock-about";
 import { fetchSheetRows } from "./google-sheets-client";
-import { safeHttpUrl } from "./safe-url";
+import { safeHttpUrl, safeImageUrl } from "./safe-url";
 
 export async function getArticles(): Promise<Article[]> {
   const rows = await fetchSheetRows("articles");
@@ -63,7 +63,7 @@ export async function getProfessor(): Promise<Professor> {
     name: p.name,
     title: p.title,
     email: p.email,
-    photo: safeHttpUrl(p.photo),
+    photo: safeImageUrl(p.photo),
     links,
     expertise: p.expertise ? p.expertise.split(";").filter(Boolean) : [],
     skills: p.skills ? p.skills.split(";").filter(Boolean) : [],
@@ -113,7 +113,7 @@ export async function getMembers(): Promise<Member[]> {
     affiliation: r.affiliation,
     email: r.email || undefined,
     status: r.status as Member["status"],
-    photo: safeHttpUrl(r.photo),
+    photo: safeImageUrl(r.photo),
     researchField: r.researchField
       ? r.researchField.split(";").filter(Boolean)
       : undefined,

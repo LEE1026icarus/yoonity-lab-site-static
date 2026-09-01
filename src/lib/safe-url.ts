@@ -9,3 +9,14 @@ export function safeHttpUrl(value?: string): string | undefined {
     return undefined;
   }
 }
+
+export function safeImageUrl(value?: string): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+
+  if (trimmed.startsWith("/images/")) {
+    return trimmed;
+  }
+
+  return safeHttpUrl(trimmed);
+}
