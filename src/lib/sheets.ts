@@ -113,6 +113,9 @@ export async function getMembers(): Promise<Member[]> {
     affiliation: r.affiliation,
     email: r.email || undefined,
     status: r.status as Member["status"],
+    googleScholar: safeHttpUrl(r.googleScholar),
+    orcid: safeHttpUrl(r.orcid),
+    homepage: safeHttpUrl(r.homepage),
     photo: safeImageUrl(r.photo),
     researchField: r.researchField
       ? r.researchField.split(";").filter(Boolean)

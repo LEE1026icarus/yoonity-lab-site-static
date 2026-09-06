@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { House } from "lucide-react";
 import { RESEARCHER_SECTIONS } from "@/data/site-navigation";
 import type { Member, Publication } from "@/lib/types";
+import { safeHttpUrl } from "@/lib/safe-url";
 
 function formatPeriod(period: string): string {
   if (!period) return "";
@@ -36,6 +38,11 @@ function MemberCard({
   member: MemberWithPublications;
   color: (typeof AVATAR_COLORS)[number];
 }) {
+  const profileLinks = [
+    { label: "Google Scholar", href: safeHttpUrl(member.googleScholar), icon: "/images/icons/google-scholar.ico" },
+    { label: "ORCID", href: safeHttpUrl(member.orcid), icon: "/images/icons/orcid.png" },
+    { label: "개인 홈페이지", href: safeHttpUrl(member.homepage), icon: undefined },
+  ].filter((link) => link.href);
   return (
     <article className="flex flex-col gap-6 rounded-2xl border border-hairline bg-paper-raised p-6 sm:flex-row sm:items-start">
       <div className="flex shrink-0 sm:flex-col sm:items-center">
@@ -59,7 +66,7 @@ function MemberCard({
         )}
       </div>
 
-      <div className="min-w-0 flex-1 sm:border-r sm:border-hairline sm:pr-6">
+      <div className="min-w-0 flex-[1.3] sm:border-r sm:border-hairline sm:pr-6">
         <h3 className="text-[22px] font-bold">
           {member.name}
           {member.isLabHead && (
@@ -87,9 +94,9 @@ function MemberCard({
         </div>
 
         {member.researchField && member.researchField.length > 0 && (
-          <div className="mt-3">
-            <p className="text-[15px] font-semibold text-ink-muted">연구 분야</p>
-            <ul className="mt-1.5 flex flex-wrap gap-1.5">
+          <div className="mt-3 flex items-start gap-2.5">
+            <p className="shrink-0 py-0.5 text-[15px] font-semibold text-ink-muted">연구 분야</p>
+            <ul className="flex min-w-0 flex-wrap gap-1.5">
               {member.researchField.map((field) => (
                 <li
                   key={field}
@@ -102,13 +109,29 @@ function MemberCard({
           </div>
         )}
 
-        {member.email && (
-          <a
+        {(member.email || profileLinks.length > 0) && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+          {member.email && <a
             href={`mailto:${member.email}`}
-            className="mt-2 inline-block truncate text-[17px] text-ink-muted transition-colors hover:text-ink"
+            className="min-w-0 break-all text-[17px] text-ink-muted transition-colors hover:text-ink"
           >
             {member.email}
-          </a>
+          </a>}
+          {profileLinks.length > 0 && <div className="flex shrink-0 items-center gap-1">
+            {profileLinks.map((link) => (
+              <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
+                aria-label={`${member.name} ${link.label} (새 탭)`}
+                className="group relative inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-axis-ai">
+                {link.icon ? (
+                  <Image src={link.icon} alt="" width={24} height={24} unoptimized />
+                ) : (
+                  <House size={24} strokeWidth={1.75} aria-hidden="true" className="text-ink-muted group-hover:text-ink" />
+                )}
+                <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap rounded bg-ink px-2 py-1 text-xs text-paper opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">{link.label}</span>
+              </a>
+            ))}
+          </div>}
+          </div>
         )}
       </div>
 

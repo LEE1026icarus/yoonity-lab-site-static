@@ -73,6 +73,9 @@ export type Member = {
   affiliation: string;
   email?: string;
   status: MemberStatus;
+  googleScholar?: string;
+  orcid?: string;
+  homepage?: string;
   photo?: string;
   researchField?: string[];
   period?: string;
