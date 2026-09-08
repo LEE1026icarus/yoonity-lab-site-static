@@ -8,6 +8,7 @@ import {
   GOOGLE_SITE_VERIFICATION,
   HOME_DESCRIPTION,
   HOME_TITLE,
+  NAVER_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "@/lib/seo";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
   description: HOME_DESCRIPTION,
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
+    other: {
+      "naver-site-verification": NAVER_SITE_VERIFICATION,
+    },
   },
   openGraph: PAGE_METADATA["/"].openGraph,
   twitter: PAGE_METADATA["/"].twitter,

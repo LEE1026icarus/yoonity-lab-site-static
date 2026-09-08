@@ -11,6 +11,7 @@ import {
   createRobotsConfig,
   createSitemapEntries,
   GOOGLE_SITE_VERIFICATION,
+  NAVER_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "../src/lib/seo.ts";
 import { getGoogleTagManagerContainerId } from "../src/lib/analytics.ts";
@@ -193,6 +194,26 @@ test("root metadata publishes the Google Search Console verification token", asy
 
   assert.equal(GOOGLE_SITE_VERIFICATION, "-H57TbUoldZv4A5RCmg0eQMi7cCZgESj_Kuf4RB3Ekk");
   assert.match(layout, /verification:\s*\{\s*google:\s*GOOGLE_SITE_VERIFICATION/);
+});
+
+test("root metadata and verification file publish the Naver ownership token", async () => {
+  const [layout, verificationFile] = await Promise.all([
+    readFile(new URL("../src/app/layout.tsx", import.meta.url), "utf8"),
+    readFile(
+      new URL(
+        "../public/navere7b3e410d64ca6e6ee4921bcbdc31a4f.html",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ]);
+
+  assert.equal(NAVER_SITE_VERIFICATION, "0b01cbef8a32814b215399c375155f39888ce5d4");
+  assert.match(layout, /"naver-site-verification":\s*NAVER_SITE_VERIFICATION/);
+  assert.equal(
+    verificationFile.trimEnd(),
+    "naver-site-verification: navere7b3e410d64ca6e6ee4921bcbdc31a4f.html",
+  );
 });
 
 test("detail route metadata and links use crawlable internal paths", async () => {
