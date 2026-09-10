@@ -65,7 +65,7 @@ test("Google Tag Manager accepts only a valid container ID", () => {
 test("legacy production hosts permanently redirect to the canonical domain", async () => {
   const redirects = await nextConfig.redirects?.();
 
-  assert.deepEqual(redirects, [
+  assert.deepEqual(redirects?.filter((redirect) => redirect.has), [
     "yoonity.kr",
     "yoonity-lab-site-static.vercel.app",
     "yoonity-lab-site-static-lee1026icarus-projects.vercel.app",
@@ -262,4 +262,18 @@ test("category navigation uses crawlable anchors instead of duplicate query URLs
   );
   assert.ok(sections.every(({ href }) => href.includes("#")));
   assert.ok(sections.every(({ href }) => !href.includes("?")));
+});
+
+test("legacy Korean paths permanently redirect to their consolidated sections", async () => {
+  const redirects = await nextConfig.redirects?.();
+
+  assert.deepEqual(redirects?.filter((redirect) => !redirect.has), [
+    { source: "/%EC%A7%80%EB%8F%84%EA%B5%90%EC%88%98", destination: "/professor", permanent: true },
+    { source: "/%EC%97%B0%EA%B5%AC%EC%9B%90", destination: "/researchers", permanent: true },
+    { source: "/%EC%97%B0%EA%B5%AC%EC%9B%90/:path*", destination: "/researchers", permanent: true },
+    { source: "/%EC%97%B0%EA%B5%AC%EC%9B%90-%EC%B6%9C%ED%8C%90", destination: "/publications", permanent: true },
+    { source: "/%ED%99%9C%EB%8F%99", destination: "/activities", permanent: true },
+    { source: "/%ED%99%9C%EB%8F%99/:path*", destination: "/activities", permanent: true },
+    { source: "/%EB%89%B4%EC%8A%A4-%EA%B8%B0%EC%82%AC/:path*", destination: "/about#news", permanent: true },
+  ]);
 });
