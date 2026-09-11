@@ -3,6 +3,8 @@ import test from "node:test";
 
 import {
   createDetailSitemapEntries,
+  detailDescription,
+  detailMetadataTitle,
   getDetailParams,
   getNewsDetail,
   getProjectDetail,
@@ -87,4 +89,35 @@ test("detail metadata uses the detail canonical and share metadata", () => {
   assert.equal(metadata.description, "벨텍소프트와 수행한 연구과제입니다.");
   assert.equal(metadata.openGraph.url, "https://lab.example.edu/projects/project-1");
   assert.equal(metadata.twitter.card, "summary_large_image");
+});
+
+test("publication metadata extracts a concise work title from a full citation", () => {
+  const english = detailMetadataTitle(
+    "publications",
+    "Lee, S., & Yoon, S. H. (2026). Evolving dynamics of resistance and adoption in digital finance: A user review analysis of FinTech and traditional banking applications. Electronic Markets, 36(1), 45.",
+  );
+  const korean = detailMetadataTitle(
+    "publications",
+    "이선녕, 구민규, 윤상혁. (2026). 핀테크 앱 리뷰에서 주제-주관성 상호작용이 유용성에 미치는 영향: PPM 기반 ZINB 모형 분석. 경영학연구, 55(2), 953-972.",
+  );
+
+  assert.match(english, /^Evolving dynamics of resistance and adoption/);
+  assert.doesNotMatch(english, /Lee, S\.|Electronic Markets/);
+  assert.match(korean, /^핀테크 앱 리뷰에서 주제-주관성 상호작용/);
+  assert.doesNotMatch(korean, /이선녕|경영학연구/);
+  assert.ok(english.length <= 56);
+  assert.ok(korean.length <= 56);
+});
+
+test("detail fallback descriptions remain unique and bounded", () => {
+  const first = detailDescription("publications", {
+    title: "첫 번째 연구",
+  });
+  const second = detailDescription("publications", {
+    title: "두 번째 연구",
+  });
+
+  assert.notEqual(first, second);
+  assert.match(first, /첫 번째 연구/);
+  assert.ok(first.length <= 160);
 });
