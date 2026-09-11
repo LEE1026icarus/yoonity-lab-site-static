@@ -38,6 +38,7 @@ const getAllNews = cache(async (): Promise<NewsDetail[]> => {
       href: article.href,
       accent: article.accent,
       thumbnail: article.thumbnail,
+      updatedAt: article.updatedAt,
     });
   }
 
@@ -53,6 +54,7 @@ const getAllNews = cache(async (): Promise<NewsDetail[]> => {
       href: item.href,
       accent: existing?.accent,
       thumbnail: existing?.thumbnail,
+      updatedAt: existing?.updatedAt,
     });
   }
 
@@ -70,6 +72,8 @@ const getAllProjects = cache(async (): Promise<ProjectDetail[]> =>
       tag: activity.tag,
       period: activity.period,
       href: activity.href,
+      summary: activity.summary,
+      updatedAt: activity.updatedAt,
     })),
 );
 
@@ -80,6 +84,12 @@ const getAllPublications = cache(async (): Promise<PublicationDetail[]> =>
       ...publication,
       kind: "publications" as const,
       slug: publication.id,
+      displayTitle: publication.displayTitle,
+      summary: publication.summary,
+      publishedAt: publication.publishedAt,
+      venue: publication.venue,
+      doi: publication.doi,
+      updatedAt: publication.updatedAt,
     })),
 );
 
@@ -201,5 +211,6 @@ export function articleToNewsDetail(article: Article): NewsDetail {
     href: article.href,
     accent: article.accent,
     thumbnail: article.thumbnail,
+    updatedAt: article.updatedAt,
   };
 }
