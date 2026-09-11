@@ -4,6 +4,7 @@ import { ContentDetail } from "@/components/content-detail";
 import { createDetailMetadata } from "@/lib/seo";
 import {
   detailDescription,
+  detailMetadataTitle,
   detailPath,
   getDetailParams,
   getPublicationDetail,
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return createDetailMetadata({
     route: detailPath("publications", publication.slug),
-    title: publication.title,
+    title: detailMetadataTitle("publications", publication.title),
     description: detailDescription("publications", publication),
     type: "article",
   });
