@@ -11,7 +11,6 @@ import {
   NAVER_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "@/lib/seo";
-import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
