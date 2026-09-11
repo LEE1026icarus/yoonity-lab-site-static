@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site-header";
 import { BackgroundScene } from "@/components/background-scene";
 import { GoogleTagManager } from "@/components/google-tag-manager";
+import { JsonLd } from "@/components/json-ld";
 import { getGoogleTagManagerContainerId } from "@/lib/analytics";
 import { siteUrl } from "@/lib/site";
 import {
@@ -11,6 +12,10 @@ import {
   NAVER_SITE_VERIFICATION,
   PAGE_METADATA,
 } from "@/lib/seo";
+import {
+  createOrganizationStructuredData,
+  createWebsiteStructuredData,
+} from "@/lib/structured-data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -40,6 +45,15 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-paper text-ink">
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@graph": [
+              createOrganizationStructuredData(),
+              createWebsiteStructuredData(),
+            ],
+          }}
+        />
         <GoogleTagManager containerId={gtmContainerId} />
         <BackgroundScene />
         <SiteHeader />

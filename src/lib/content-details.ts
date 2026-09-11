@@ -38,6 +38,7 @@ const getAllNews = cache(async (): Promise<NewsDetail[]> => {
       href: article.href,
       accent: article.accent,
       thumbnail: article.thumbnail,
+      updatedAt: article.updatedAt,
     });
   }
 
@@ -53,6 +54,7 @@ const getAllNews = cache(async (): Promise<NewsDetail[]> => {
       href: item.href,
       accent: existing?.accent,
       thumbnail: existing?.thumbnail,
+      updatedAt: existing?.updatedAt,
     });
   }
 
@@ -70,6 +72,8 @@ const getAllProjects = cache(async (): Promise<ProjectDetail[]> =>
       tag: activity.tag,
       period: activity.period,
       href: activity.href,
+      summary: activity.summary,
+      updatedAt: activity.updatedAt,
     })),
 );
 
@@ -80,6 +84,12 @@ const getAllPublications = cache(async (): Promise<PublicationDetail[]> =>
       ...publication,
       kind: "publications" as const,
       slug: publication.id,
+      displayTitle: publication.displayTitle,
+      summary: publication.summary,
+      publishedAt: publication.publishedAt,
+      venue: publication.venue,
+      doi: publication.doi,
+      updatedAt: publication.updatedAt,
     })),
 );
 
@@ -141,7 +151,13 @@ export async function createDetailSitemapEntries(baseUrl: URL) {
 
 export function detailDescription(
   kind: DetailKind,
-  fields: { excerpt?: string; meta?: string; org?: string; period?: string },
+  fields: {
+    title?: string;
+    excerpt?: string;
+    meta?: string;
+    org?: string;
+    period?: string;
+  },
 ) {
   const content = [fields.excerpt, fields.meta, fields.org, fields.period]
     .filter((value): value is string => Boolean(value?.trim()))
@@ -153,7 +169,32 @@ export function detailDescription(
     projects: "Yoonity Lab 연구과제",
     publications: "Yoonity Lab 연구성과",
   };
-  return `${SITE_NAME} ${labels[kind]} 상세 기록`;
+  const subject = fields.title?.trim();
+  return truncateText(
+    subject
+      ? `${subject} — ${SITE_NAME} ${labels[kind]}`
+      : `${SITE_NAME} ${labels[kind]} 상세 기록`,
+    160,
+  );
+}
+
+function truncateText(value: string, maxLength: number) {
+  if (value.length <= maxLength) return value;
+  const shortened = value.slice(0, maxLength - 1);
+  const wordBoundary = shortened.lastIndexOf(" ");
+  const end = wordBoundary >= Math.floor(maxLength * 0.65)
+    ? wordBoundary
+    : shortened.length;
+  return `${shortened.slice(0, end).trimEnd()}…`;
+}
+
+export function detailMetadataTitle(kind: DetailKind, title: string) {
+  const normalized = title.trim();
+  if (kind !== "publications") return truncateText(normalized, 56);
+
+  const citationBody = normalized.match(/\(\d{4}\)\.\s*(.+)/)?.[1] ?? normalized;
+  const workTitle = citationBody.match(/^(.+?)\.\s+[^.]+(?:,|$)/)?.[1] ?? citationBody;
+  return truncateText(workTitle, 56);
 }
 
 export function detailPath(kind: DetailKind, slug: string) {
@@ -170,5 +211,6 @@ export function articleToNewsDetail(article: Article): NewsDetail {
     href: article.href,
     accent: article.accent,
     thumbnail: article.thumbnail,
+    updatedAt: article.updatedAt,
   };
 }

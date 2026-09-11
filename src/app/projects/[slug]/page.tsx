@@ -4,6 +4,7 @@ import { ContentDetail } from "@/components/content-detail";
 import { createDetailMetadata } from "@/lib/seo";
 import {
   detailDescription,
+  detailMetadataTitle,
   detailPath,
   getDetailParams,
   getProjectDetail,
@@ -25,8 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return createDetailMetadata({
     route: detailPath("projects", project.slug),
-    title: project.title,
-    description: detailDescription("projects", project),
+    title: detailMetadataTitle("projects", project.title),
+    description: project.summary ?? detailDescription("projects", project),
   });
 }
 
@@ -39,7 +40,7 @@ export default async function ProjectDetailPage({ params }: Props) {
     <ContentDetail
       eyebrow="연구과제"
       title={project.title}
-      description={detailDescription("projects", project)}
+      description={project.summary ?? detailDescription("projects", project)}
       metadata={[
         ...(project.org ? [{ label: "협력 기관", value: project.org }] : []),
         ...(project.tag ? [{ label: "구분", value: project.tag }] : []),
