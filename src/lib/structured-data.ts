@@ -258,6 +258,8 @@ export function createPublicationStructuredData(
   const doiUrl = doi
     ? `https://doi.org/${doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "")}`
     : undefined;
+  const isPaper = publication.category === "intl-paper"
+    || publication.category === "domestic-paper";
 
   return compactObject({
     "@context": "https://schema.org",
@@ -275,8 +277,11 @@ export function createPublicationStructuredData(
     author: publication.authors?.map((name) => ({ "@type": "Person", name })),
     datePublished: publication.publishedAt,
     dateModified: publication.updatedAt,
-    isPartOf: publication.venue
+    isPartOf: isPaper && publication.venue
       ? { "@type": "Periodical", name: publication.venue }
+      : undefined,
+    publisher: publication.category === "book" && publication.venue
+      ? { "@type": "Organization", name: publication.venue }
       : undefined,
   });
 }

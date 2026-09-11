@@ -26,8 +26,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return createDetailMetadata({
     route: detailPath("publications", publication.slug),
-    title: publication.displayTitle
-      ?? detailMetadataTitle("publications", publication.title),
+    title: detailMetadataTitle(
+      "publications",
+      publication.displayTitle ?? publication.title,
+    ),
     description: publication.summary ?? detailDescription("publications", publication),
     type: "article",
   });

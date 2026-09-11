@@ -207,3 +207,24 @@ test("publication structured data emits optional source-backed scholarly fields"
   assert.equal(publicationData.isPartOf.name, "Example Journal");
   assert.equal(publicationData.identifier, "https://doi.org/10.1234/example.2026.1");
 });
+
+test("non-article publication venues are not mislabeled as periodicals", () => {
+  const bookData = createPublicationStructuredData(
+    {
+      kind: "publications",
+      slug: "book-1",
+      id: "book-1",
+      category: "book",
+      title: "Example Book",
+      venue: "Example Publisher",
+    },
+    baseUrl,
+  );
+
+  assert.equal(bookData["@type"], "Book");
+  assert.equal(bookData.isPartOf, undefined);
+  assert.deepEqual(bookData.publisher, {
+    "@type": "Organization",
+    name: "Example Publisher",
+  });
+});
