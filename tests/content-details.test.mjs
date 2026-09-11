@@ -121,3 +121,14 @@ test("detail fallback descriptions remain unique and bounded", () => {
   assert.match(first, /첫 번째 연구/);
   assert.ok(first.length <= 160);
 });
+
+test("publication detail preserves optional editorial fields", async () => {
+  const publication = await getPublicationDetail("intl-0");
+
+  assert.ok("displayTitle" in publication);
+  assert.ok("summary" in publication);
+  assert.ok("publishedAt" in publication);
+  assert.ok("venue" in publication);
+  assert.ok("doi" in publication);
+  assert.ok("updatedAt" in publication);
+});

@@ -28,6 +28,7 @@ export async function getArticles(): Promise<Article[]> {
     accent: (r.accent as Article["accent"]) || "ai",
     href: safeHttpUrl(r.href) || "#",
     thumbnail: safeHttpUrl(r.thumbnail),
+    updatedAt: r.updatedAt || undefined,
   }));
 }
 
@@ -84,6 +85,8 @@ export async function getActivities(): Promise<Activity[]> {
     tag: r.tag || undefined,
     period: r.period,
     href: safeHttpUrl(r.href),
+    summary: r.summary || undefined,
+    updatedAt: r.updatedAt || undefined,
   }));
 }
 
@@ -99,6 +102,12 @@ export async function getPublications(): Promise<Publication[]> {
     authors: r.authors
       ? r.authors.split(";").map((s) => s.trim()).filter(Boolean)
       : undefined,
+    displayTitle: r.displayTitle || undefined,
+    summary: r.summary || undefined,
+    publishedAt: r.publishedAt || undefined,
+    venue: r.venue || undefined,
+    doi: r.doi || undefined,
+    updatedAt: r.updatedAt || undefined,
   }));
 }
 

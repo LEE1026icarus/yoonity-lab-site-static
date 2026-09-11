@@ -8,6 +8,7 @@ import {
   createProjectStructuredData,
   createProfessorStructuredData,
   createPublicationStructuredData,
+  createWebsiteStructuredData,
   serializeJsonLd,
 } from "../src/lib/structured-data.ts";
 import {
@@ -34,6 +35,16 @@ test("organization and AboutPage share one stable organization identity", () => 
   assert.equal(about["@id"], "https://lab.example.edu/about#about-page");
   assert.equal(about.url, "https://lab.example.edu/about");
   assert.equal(about.mainEntity["@id"], organization["@id"]);
+});
+
+test("WebSite structured data identifies the site and its publisher", () => {
+  const website = createWebsiteStructuredData(baseUrl);
+
+  assert.equal(website["@type"], "WebSite");
+  assert.equal(website["@id"], "https://lab.example.edu/#website");
+  assert.equal(website.name, "Yoonity Lab");
+  assert.equal(website.url, "https://lab.example.edu/");
+  assert.equal(website.publisher["@id"], "https://lab.example.edu/#organization");
 });
 
 test("professor structured data connects ProfilePage to a repository-backed Person", () => {
@@ -163,4 +174,36 @@ test("detail structured data uses only repository-backed fields", async () => {
   assert.equal(publicationData["@type"], "ScholarlyArticle");
   assert.equal(publicationData.author, undefined);
   assert.equal(JSON.stringify(publicationData).includes("undefined"), false);
+});
+
+test("publication structured data emits optional source-backed scholarly fields", () => {
+  const publicationData = createPublicationStructuredData(
+    {
+      kind: "publications",
+      slug: "paper-1",
+      id: "paper-1",
+      category: "intl-paper",
+      title: "Full citation kept for display",
+      displayTitle: "A source-backed article title",
+      summary: "A concise source-backed research summary.",
+      authors: ["Author One", "Author Two"],
+      publishedAt: "2026-03-01",
+      updatedAt: "2026-04-02",
+      venue: "Example Journal",
+      doi: "10.1234/example.2026.1",
+    },
+    baseUrl,
+  );
+
+  assert.equal(publicationData.name, "A source-backed article title");
+  assert.equal(publicationData.headline, "A source-backed article title");
+  assert.equal(publicationData.description, "A concise source-backed research summary.");
+  assert.deepEqual(publicationData.author, [
+    { "@type": "Person", name: "Author One" },
+    { "@type": "Person", name: "Author Two" },
+  ]);
+  assert.equal(publicationData.datePublished, "2026-03-01");
+  assert.equal(publicationData.dateModified, "2026-04-02");
+  assert.equal(publicationData.isPartOf.name, "Example Journal");
+  assert.equal(publicationData.identifier, "https://doi.org/10.1234/example.2026.1");
 });

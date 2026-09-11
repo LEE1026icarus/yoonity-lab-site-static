@@ -75,6 +75,24 @@ function organizationId(baseUrl: URL) {
   return absoluteUrl("/#organization", baseUrl);
 }
 
+function websiteId(baseUrl: URL) {
+  return absoluteUrl("/#website", baseUrl);
+}
+
+export function createWebsiteStructuredData(
+  baseUrl: URL = siteUrl,
+): JsonLdObject {
+  return compactObject({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": websiteId(baseUrl),
+    name: "Yoonity Lab",
+    url: absoluteUrl("/", baseUrl),
+    publisher: { "@id": organizationId(baseUrl) },
+    inLanguage: "ko-KR",
+  });
+}
+
 export function createOrganizationStructuredData(
   baseUrl: URL = siteUrl,
 ): JsonLdObject {
@@ -194,6 +212,9 @@ export function createNewsStructuredData(
     mainEntityOfPage: { "@id": url },
     about: detailOrganizationReference(baseUrl),
     isBasedOn: detailSourceUrl(news.href),
+    image: optionalWebUrl(news.thumbnail, baseUrl),
+    dateModified: news.updatedAt,
+    publisher: detailOrganizationReference(baseUrl),
   });
 }
 
@@ -212,12 +233,13 @@ export function createProjectStructuredData(
     "@type": "ResearchProject",
     "@id": `${url}#research-project`,
     name: project.title,
-    description,
+    description: project.summary ?? description,
     url,
     mainEntityOfPage: { "@id": url },
     about: detailOrganizationReference(baseUrl),
     sponsor: project.org ? { "@type": "Organization", name: project.org } : undefined,
     isBasedOn: detailSourceUrl(project.href),
+    dateModified: project.updatedAt,
   });
 }
 
@@ -232,19 +254,30 @@ export function createPublicationStructuredData(
     : publication.category === "patent"
       ? "CreativeWork"
       : "ScholarlyArticle";
+  const doi = publication.doi?.trim();
+  const doiUrl = doi
+    ? `https://doi.org/${doi.replace(/^https?:\/\/(?:dx\.)?doi\.org\//i, "")}`
+    : undefined;
 
   return compactObject({
     "@context": "https://schema.org",
     "@type": type,
     "@id": `${url}#publication`,
-    name: publication.title,
-    description: publication.meta,
+    name: publication.displayTitle ?? publication.title,
+    headline: publication.displayTitle,
+    description: publication.summary ?? publication.meta,
     genre: publication.category === "patent" ? "특허" : undefined,
-    identifier: publication.slug,
+    identifier: doiUrl,
     url,
     mainEntityOfPage: { "@id": url },
     about: detailOrganizationReference(baseUrl),
     isBasedOn: detailSourceUrl(publication.href),
+    author: publication.authors?.map((name) => ({ "@type": "Person", name })),
+    datePublished: publication.publishedAt,
+    dateModified: publication.updatedAt,
+    isPartOf: publication.venue
+      ? { "@type": "Periodical", name: publication.venue }
+      : undefined,
   });
 }
 

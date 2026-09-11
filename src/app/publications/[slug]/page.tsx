@@ -26,8 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return createDetailMetadata({
     route: detailPath("publications", publication.slug),
-    title: detailMetadataTitle("publications", publication.title),
-    description: detailDescription("publications", publication),
+    title: publication.displayTitle
+      ?? detailMetadataTitle("publications", publication.title),
+    description: publication.summary ?? detailDescription("publications", publication),
     type: "article",
   });
 }
@@ -49,9 +50,14 @@ export default async function PublicationDetailPage({ params }: Props) {
   return (
     <ContentDetail
       eyebrow={sectionLabel}
-      title={publication.title}
-      description={detailDescription("publications", publication)}
-      metadata={publication.meta ? [{ label: "서지 정보", value: publication.meta }] : []}
+      title={publication.displayTitle ?? publication.title}
+      description={publication.summary ?? detailDescription("publications", publication)}
+      metadata={[
+        ...(publication.meta ? [{ label: "서지 정보", value: publication.meta }] : []),
+        ...(publication.venue ? [{ label: "학술지·발행처", value: publication.venue }] : []),
+        ...(publication.publishedAt ? [{ label: "발행일", value: publication.publishedAt }] : []),
+        ...(publication.doi ? [{ label: "DOI", value: publication.doi }] : []),
+      ]}
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "논문·도서·특허", href: "/publications" },

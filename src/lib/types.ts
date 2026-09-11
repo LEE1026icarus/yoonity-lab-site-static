@@ -6,6 +6,7 @@ export type Article = {
   accent: "ai" | "genai" | "quantum";
   href: string;
   thumbnail?: string;
+  updatedAt?: string;
 };
 
 export type ResearchAxis = {
@@ -50,6 +51,8 @@ export type Activity = {
   tag?: string;
   period: string;
   href?: string;
+  summary?: string;
+  updatedAt?: string;
 };
 
 export type PublicationCategory = "intl-paper" | "domestic-paper" | "book" | "patent";
@@ -61,6 +64,12 @@ export type Publication = {
   meta?: string;
   href?: string;
   authors?: string[];
+  displayTitle?: string;
+  summary?: string;
+  publishedAt?: string;
+  venue?: string;
+  doi?: string;
+  updatedAt?: string;
 };
 
 export type MemberStatus = "current" | "alumni";
@@ -124,6 +133,7 @@ export type NewsDetail = {
   href?: string;
   accent?: Article["accent"];
   thumbnail?: string;
+  updatedAt?: string;
 };
 
 export type ProjectDetail = {
@@ -134,6 +144,8 @@ export type ProjectDetail = {
   tag?: string;
   period: string;
   href?: string;
+  summary?: string;
+  updatedAt?: string;
 };
 
 export type PublicationDetail = Publication & {
