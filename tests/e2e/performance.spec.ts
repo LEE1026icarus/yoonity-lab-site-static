@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("home loads Pretendard through unicode-ranged dynamic subsets", async ({ page }) => {
+test("home uses a stable system font stack without web-font replacement", async ({ page }) => {
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
 
@@ -33,7 +33,6 @@ test("home loads Pretendard through unicode-ranged dynamic subsets", async ({ pa
     };
   });
 
-  expect(fontState.headingFamily).toContain("Pretendard Variable");
-  expect(fontState.fontFaces.length).toBeGreaterThan(10);
-  expect(fontState.fontFaces.every(({ unicodeRange }) => unicodeRange.length > 0)).toBe(true);
+  expect(fontState.headingFamily).toContain("-apple-system");
+  expect(fontState.fontFaces).toHaveLength(0);
 });

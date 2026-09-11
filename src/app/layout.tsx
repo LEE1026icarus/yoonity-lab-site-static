@@ -16,7 +16,6 @@ import {
   createOrganizationStructuredData,
   createWebsiteStructuredData,
 } from "@/lib/structured-data";
-import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
