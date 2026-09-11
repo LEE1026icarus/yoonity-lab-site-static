@@ -105,8 +105,8 @@ test("publication metadata extracts a concise work title from a full citation", 
   assert.doesNotMatch(english, /Lee, S\.|Electronic Markets/);
   assert.match(korean, /^핀테크 앱 리뷰에서 주제-주관성 상호작용/);
   assert.doesNotMatch(korean, /이선녕|경영학연구/);
-  assert.ok(english.length <= 70);
-  assert.ok(korean.length <= 70);
+  assert.ok(english.length <= 56);
+  assert.ok(korean.length <= 56);
 });
 
 test("detail fallback descriptions remain unique and bounded", () => {

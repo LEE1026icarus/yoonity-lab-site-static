@@ -190,11 +190,11 @@ function truncateText(value: string, maxLength: number) {
 
 export function detailMetadataTitle(kind: DetailKind, title: string) {
   const normalized = title.trim();
-  if (kind !== "publications") return truncateText(normalized, 70);
+  if (kind !== "publications") return truncateText(normalized, 56);
 
   const citationBody = normalized.match(/\(\d{4}\)\.\s*(.+)/)?.[1] ?? normalized;
   const workTitle = citationBody.match(/^(.+?)\.\s+[^.]+(?:,|$)/)?.[1] ?? citationBody;
-  return truncateText(workTitle, 70);
+  return truncateText(workTitle, 56);
 }
 
 export function detailPath(kind: DetailKind, slug: string) {
