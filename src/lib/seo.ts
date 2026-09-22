@@ -6,7 +6,7 @@ export const HOME_TITLE =
 export const HOME_DESCRIPTION =
   "동국대학교 경영정보학과 Yoonity Lab은 AI·생성형 AI·양자컴퓨팅을 활용해 산업 의사결정, 예측·최적화 및 산학협력 과제를 연구합니다.";
 export const GOOGLE_SITE_VERIFICATION = "-H57TbUoldZv4A5RCmg0eQMi7cCZgESj_Kuf4RB3Ekk";
-export const NAVER_SITE_VERIFICATION = "993663e0ec7396a141b75ca4199450b2cc006c7b";
+export const NAVER_SITE_VERIFICATION = "ee77043c325f4ab15e8fd527bf5d94336de82f14";
 
 export const SHARE_IMAGE = {
   url: new URL("/opengraph-image", siteUrl).toString(),

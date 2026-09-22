@@ -208,7 +208,7 @@ test("root metadata and verification file publish the Naver ownership token", as
     ),
   ]);
 
-  assert.equal(NAVER_SITE_VERIFICATION, "993663e0ec7396a141b75ca4199450b2cc006c7b");
+  assert.equal(NAVER_SITE_VERIFICATION, "ee77043c325f4ab15e8fd527bf5d94336de82f14");
   assert.match(layout, /"naver-site-verification":\s*NAVER_SITE_VERIFICATION/);
   assert.equal(
     verificationFile.trimEnd(),
