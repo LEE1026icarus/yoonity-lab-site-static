@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { getGoogleTagManagerContainerId } from "@/lib/analytics";
 import { siteUrl } from "@/lib/site";
 import {
+  createSiteIcons,
   GOOGLE_SITE_VERIFICATION,
   HOME_DESCRIPTION,
   HOME_TITLE,
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     template: "%s | Yoonity Lab",
   },
   description: HOME_DESCRIPTION,
+  icons: createSiteIcons(),
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
     other: {

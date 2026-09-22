@@ -241,6 +241,33 @@ test("Open Graph image uses the Next.js file convention at 1200 by 630", async (
   assert.doesNotMatch(source, /runtime\s*=\s*["']edge["']/);
 });
 
+test("site icon metadata uses an absolute branded PNG URL", async () => {
+  const seo = await import("../src/lib/seo.ts");
+
+  assert.equal(typeof seo.createSiteIcons, "function");
+  assert.deepEqual(seo.createSiteIcons(new URL("https://lab.example.edu")), {
+    icon: [
+      {
+        url: "https://lab.example.edu/yoonity-icon.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+  });
+});
+
+test("the branded site icon is a square 512 pixel PNG", async () => {
+  const icon = await readFile(
+    new URL("../public/yoonity-icon.png", import.meta.url),
+  ).catch(() => null);
+
+  assert.ok(icon, "public/yoonity-icon.png must exist");
+  assert.deepEqual([...icon.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  assert.equal(icon.readUInt32BE(16), 512);
+  assert.equal(icon.readUInt32BE(20), 512);
+  assert.ok(icon.byteLength > 5_000);
+});
+
 test("category navigation uses crawlable anchors instead of duplicate query URLs", () => {
   const sections = [
     ...ACTIVITY_SECTIONS,

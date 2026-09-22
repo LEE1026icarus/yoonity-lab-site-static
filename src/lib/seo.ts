@@ -15,6 +15,18 @@ export const SHARE_IMAGE = {
   alt: "Yoonity Lab — 산업 문제 해결형 AI 연구실",
 };
 
+export function createSiteIcons(baseUrl: URL = siteUrl) {
+  return {
+    icon: [
+      {
+        url: new URL("/yoonity-icon.png", baseUrl).toString(),
+        type: "image/png",
+        sizes: "512x512",
+      },
+    ],
+  };
+}
+
 type IndexableRoute = (typeof INDEXABLE_ROUTES)[number];
 
 type DetailMetadataInput = {

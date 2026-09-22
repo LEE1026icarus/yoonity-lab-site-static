@@ -4,21 +4,27 @@ import { RESEARCHER_SECTIONS } from "@/data/site-navigation";
 import type { Member, Publication } from "@/lib/types";
 import { safeHttpUrl } from "@/lib/safe-url";
 
-function formatPeriod(period: string): string {
-  if (!period) return "";
-  if (period.includes("–") || period.includes("-–")) return period;
-  if (period.endsWith("-")) {
-    const yearMonth = period.slice(0, -1);
-    const [year, month] = yearMonth.split(".");
-    return `20${year}.${month} – 현재`;
+export function formatPeriod(period: string): string {
+  const value = period.trim();
+  if (!value) return "";
+  if (value.includes("–") || value.includes("~")) return value;
+
+  const yearMonth = "(\\d{2}|\\d{4})\\.(0[1-9]|1[0-2])";
+  const range = new RegExp(`^${yearMonth}\\s*-\\s*${yearMonth}$`).exec(value);
+  const openEnded = new RegExp(`^${yearMonth}\\s*-$`).exec(value);
+  const incomplete = new RegExp(`^${yearMonth}\\s*-.+$`).exec(value);
+  const normalizeYear = (year: string) => year.length === 2 ? `20${year}` : year;
+
+  if (range) {
+    return `${normalizeYear(range[1])}.${range[2]} – ${normalizeYear(range[3])}.${range[4]}`;
   }
-  if (period.includes("-")) {
-    const [start, end] = period.split("-");
-    const [startYear, startMonth] = start.split(".");
-    const [endYear, endMonth] = end.split(".");
-    return `20${startYear}.${startMonth} – 20${endYear}.${endMonth}`;
+  if (openEnded) {
+    return `${normalizeYear(openEnded[1])}.${openEnded[2]} – 현재`;
   }
-  return period;
+  if (incomplete) {
+    return `${normalizeYear(incomplete[1])}.${incomplete[2]}`;
+  }
+  return value;
 }
 
 const AVATAR_COLORS = ["ai", "genai", "quantum"] as const;
