@@ -61,6 +61,10 @@ const getAllNews = cache(async (): Promise<NewsDetail[]> => {
   return [...merged.values()].sort((a, b) => b.date.localeCompare(a.date));
 });
 
+export async function getNewsDetails() {
+  return getAllNews();
+}
+
 const getAllProjects = cache(async (): Promise<ProjectDetail[]> =>
   (await getActivities())
     .filter((activity) => activity.category === "project" && isSafeDetailSlug(activity.id))
@@ -153,29 +157,44 @@ export function detailDescription(
   kind: DetailKind,
   fields: {
     title?: string;
+    displayTitle?: string;
+    summary?: string;
     excerpt?: string;
     meta?: string;
     org?: string;
+    tag?: string;
     period?: string;
   },
 ) {
-  const content = [fields.excerpt, fields.meta, fields.org, fields.period]
-    .filter((value): value is string => Boolean(value?.trim()))
+  const normalize = (value: string | undefined) => value
+    ?.replace(/Yoonity Lab(?:\s+Yoonity Lab)+/gi, "Yoonity Lab")
+    .replace(/\s+/g, " ")
+    .trim();
+  const rawSubject = normalize(fields.displayTitle ?? fields.title);
+  const subject = rawSubject && kind === "publications"
+    ? detailMetadataTitle("publications", rawSubject)
+    : rawSubject;
+  const lead = kind === "news"
+    ? `${subject ?? SITE_NAME} 관련 Yoonity Lab 연구실 소식입니다.`
+    : kind === "projects"
+      ? `${subject ?? SITE_NAME} 연구과제의 협력 기관, 수행 기간과 주요 정보를 소개합니다.`
+      : `${subject ?? SITE_NAME} 연구성과의 서지 정보와 원문을 확인하세요.`;
+  const details = kind === "news"
+    ? [fields.excerpt]
+    : kind === "projects"
+      ? [
+          fields.summary,
+          fields.org ? `협력 기관: ${fields.org}` : undefined,
+          fields.period ? `기간: ${fields.period}` : undefined,
+          fields.tag,
+        ]
+      : [fields.summary, fields.meta];
+  const content = details
+    .map(normalize)
+    .filter((value): value is string => Boolean(value))
     .join(" · ");
-  if (content) return content;
 
-  const labels: Record<DetailKind, string> = {
-    news: "연구실 소식",
-    projects: "Yoonity Lab 연구과제",
-    publications: "Yoonity Lab 연구성과",
-  };
-  const subject = fields.title?.trim();
-  return truncateText(
-    subject
-      ? `${subject} — ${SITE_NAME} ${labels[kind]}`
-      : `${SITE_NAME} ${labels[kind]} 상세 기록`,
-    160,
-  );
+  return truncateText(content ? `${lead} ${content}` : lead, 160);
 }
 
 function truncateText(value: string, maxLength: number) {

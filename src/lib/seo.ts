@@ -39,7 +39,10 @@ type DetailMetadataInput = {
 type PageMetadata = {
   title: string | { absolute: string };
   description: string;
-  alternates: { canonical: IndexableRoute };
+  alternates: {
+    canonical: IndexableRoute;
+    types?: { "application/rss+xml": string };
+  };
   openGraph: {
     type: "website";
     locale: string;
@@ -68,7 +71,10 @@ function createPageMetadata(
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: route },
+    alternates: {
+      canonical: route,
+      ...(route === "/" ? createFeedAlternates(siteUrl) : {}),
+    },
     openGraph: {
       type: "website",
       locale: "ko_KR",
@@ -92,6 +98,13 @@ export function createDetailMetadata(
   baseUrl: URL = siteUrl,
 ) {
   const brandedTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
+  const category = route.split("/").filter(Boolean)[0];
+  const shareImagePath = category === "news"
+    || category === "projects"
+    || category === "publications"
+    ? `/${category}/opengraph-image`
+    : "/opengraph-image";
+  const shareImageUrl = new URL(shareImagePath, baseUrl).toString();
 
   return {
     title,
@@ -107,7 +120,7 @@ export function createDetailMetadata(
       images: [
         {
           ...SHARE_IMAGE,
-          url: new URL("/opengraph-image", baseUrl).toString(),
+          url: shareImageUrl,
         },
       ],
     },
@@ -115,7 +128,15 @@ export function createDetailMetadata(
       card: "summary_large_image" as const,
       title: brandedTitle,
       description,
-      images: [new URL("/opengraph-image", baseUrl).toString()],
+      images: [shareImageUrl],
+    },
+  };
+}
+
+export function createFeedAlternates(baseUrl: URL = siteUrl) {
+  return {
+    types: {
+      "application/rss+xml": new URL("/rss.xml", baseUrl).toString(),
     },
   };
 }

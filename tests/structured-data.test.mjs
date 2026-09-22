@@ -37,6 +37,20 @@ test("organization and AboutPage share one stable organization identity", () => 
   assert.equal(about.mainEntity["@id"], organization["@id"]);
 });
 
+test("organization sameAs publishes unique active web channels only", () => {
+  const organization = createOrganizationStructuredData(baseUrl, [
+    "https://blog.naver.com/yoonity519",
+    "javascript:alert(1)",
+    "https://github.com/koreatechbigdatalab",
+    "https://blog.naver.com/yoonity519",
+  ]);
+
+  assert.deepEqual(organization.sameAs, [
+    "https://blog.naver.com/yoonity519",
+    "https://github.com/koreatechbigdatalab",
+  ]);
+});
+
 test("WebSite structured data identifies the site and its publisher", () => {
   const website = createWebsiteStructuredData(baseUrl);
 

@@ -95,7 +95,16 @@ export function createWebsiteStructuredData(
 
 export function createOrganizationStructuredData(
   baseUrl: URL = siteUrl,
+  channels: string[] = [
+    "https://blog.naver.com/yoonity519",
+    "https://github.com/koreatechbigdatalab",
+  ],
 ): JsonLdObject {
+  const sameAs = [...new Set(channels.flatMap((href) => {
+    const url = optionalExternalWebUrl(href);
+    return url ? [url] : [];
+  }))];
+
   return compactObject({
     "@context": "https://schema.org",
     "@type": "ResearchOrganization",
@@ -106,6 +115,7 @@ export function createOrganizationStructuredData(
     logo: absoluteUrl("/yoonity-logo-black.png", baseUrl),
     description: siteCopy.brand.description,
     email: siteCopy.contact.collaborationEmail,
+    sameAs,
     parentOrganization: {
       "@type": "CollegeOrUniversity",
       name: "동국대학교",

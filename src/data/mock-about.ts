@@ -23,8 +23,20 @@ export const mockAboutPageData: AboutPageData = {
     },
   ],
   channels: [
-    { id: "blog", title: "Blog", status: "coming-soon", order: 1 },
-    { id: "github", title: "GitHub", status: "coming-soon", order: 2 },
+    {
+      id: "blog",
+      title: "Blog",
+      href: "https://blog.naver.com/yoonity519",
+      status: "active",
+      order: 1,
+    },
+    {
+      id: "github",
+      title: "GitHub",
+      href: "https://github.com/koreatechbigdatalab",
+      status: "active",
+      order: 2,
+    },
   ],
   news: [
     {

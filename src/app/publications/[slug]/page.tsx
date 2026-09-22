@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "publications",
       publication.displayTitle ?? publication.title,
     ),
-    description: publication.summary ?? detailDescription("publications", publication),
+    description: detailDescription("publications", publication),
     type: "article",
   });
 }
@@ -53,7 +53,7 @@ export default async function PublicationDetailPage({ params }: Props) {
     <ContentDetail
       eyebrow={sectionLabel}
       title={publication.displayTitle ?? publication.title}
-      description={publication.summary ?? detailDescription("publications", publication)}
+      description={detailDescription("publications", publication)}
       metadata={[
         ...(publication.meta ? [{ label: "서지 정보", value: publication.meta }] : []),
         ...(publication.venue ? [{ label: "학술지·발행처", value: publication.venue }] : []),

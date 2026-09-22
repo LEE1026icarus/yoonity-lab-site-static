@@ -55,6 +55,10 @@ const sortNews = (items: AboutNewsItem[]) =>
     (a, b) => b.date.localeCompare(a.date) || a.order - b.order || a.id.localeCompare(b.id),
   );
 
+function uniqueById<T extends { id: string }>(items: T[]) {
+  return [...new Map(items.map((item) => [item.id, item])).values()];
+}
+
 export function normalizeAboutPageData(
   rows: AboutSheetRows,
   fallback: AboutPageData,
@@ -92,7 +96,7 @@ export function normalizeAboutPageData(
     })
     .sort((a, b) => a.order - b.order);
 
-  const news = rows.news
+  const news = uniqueById(rows.news
     .flatMap((row, index): AboutNewsItem[] => {
       const href = safeHttpUrl(row.href);
       const date = toCalendarDate(row.date ?? "");
@@ -105,7 +109,7 @@ export function normalizeAboutPageData(
         href,
         order: toOrder(row.order ?? "", index + 1),
       }];
-    })
+    }))
     .sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order || a.id.localeCompare(b.id));
 
   const recruitmentHref = safeHttpUrl(configuredRecruitmentHref);

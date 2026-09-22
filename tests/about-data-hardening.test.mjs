@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { generateKeyPairSync } from "node:crypto";
 import test from "node:test";
 import { getAboutPageData } from "../src/lib/sheets.ts";
+import { normalizeAboutPageData } from "../src/lib/about-data.ts";
 import { mockAboutPageData } from "../src/data/mock-about.ts";
 
 const row = (values) => ({
@@ -78,4 +79,27 @@ test("About sheet data falls back safely and shares one OAuth token request", { 
     { id: "coming", title: "Coming soon", status: "coming-soon", order: 2 },
   ]);
   assert.deepEqual(data.news, mockAboutPageData.news);
+});
+
+test("About news merges duplicate sheet rows by stable id", () => {
+  const duplicate = {
+    id: "same-news",
+    date: "2026-09-22",
+    title: "같은 뉴스",
+    excerpt: "같은 설명",
+    href: "https://example.com/news",
+    visible: "TRUE",
+    order: "1",
+  };
+  const data = normalizeAboutPageData(
+    {
+      settings: [],
+      resources: [],
+      channels: [],
+      news: [duplicate, { ...duplicate }],
+    },
+    mockAboutPageData,
+  );
+
+  assert.deepEqual(data.news.map(({ id }) => id), ["same-news"]);
 });

@@ -88,7 +88,41 @@ test("detail metadata uses the detail canonical and share metadata", () => {
   assert.equal(metadata.title, "올바로 시스템 관련 상하위법 챗봇 개발");
   assert.equal(metadata.description, "벨텍소프트와 수행한 연구과제입니다.");
   assert.equal(metadata.openGraph.url, "https://lab.example.edu/projects/project-1");
+  assert.equal(
+    metadata.openGraph.images[0].url,
+    "https://lab.example.edu/projects/opengraph-image",
+  );
+  assert.deepEqual(metadata.twitter.images, [
+    "https://lab.example.edu/projects/opengraph-image",
+  ]);
   assert.equal(metadata.twitter.card, "summary_large_image");
+});
+
+test("detail descriptions enrich short records, remove repeated branding, and stay bounded", () => {
+  const shortNews = detailDescription("news", {
+    title: "AI 연구소 출범",
+    excerpt: "관련 공식 소식",
+  });
+  const shortProject = detailDescription("projects", {
+    title: "의료 AI 연구",
+    org: "하나로병원",
+    period: "2026.01 ~ 2026.12",
+  });
+  const repeatedBrand = detailDescription("publications", {
+    title: "시청자의 온라인 리뷰를 활용한 가치측정",
+  });
+  const longNews = detailDescription("news", {
+    title: "긴 연구실 소식",
+    excerpt: "가".repeat(220),
+  });
+
+  for (const description of [shortNews, shortProject, repeatedBrand, longNews]) {
+    assert.ok(description.length >= 30, description);
+    assert.ok(description.length <= 160, description);
+  }
+  assert.match(shortNews, /AI 연구소 출범/);
+  assert.match(shortProject, /하나로병원/);
+  assert.doesNotMatch(repeatedBrand, /Yoonity Lab Yoonity Lab/);
 });
 
 test("publication metadata extracts a concise work title from a full citation", () => {
