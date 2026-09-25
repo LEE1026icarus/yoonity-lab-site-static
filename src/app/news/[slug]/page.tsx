@@ -46,10 +46,10 @@ export default async function NewsDetailPage({ params }: Props) {
       breadcrumbs={[
         { label: "홈", href: "/" },
         { label: "연구실 소개", href: "/about" },
-        { label: "연구실 소식", href: "/about#news" },
+        { label: "연구실 소식", href: "/news" },
         { label: news.title, href: detailPath("news", news.slug) },
       ]}
-      parentHref="/about#news"
+      parentHref="/news"
       parentLabel="연구실 소식"
       sourceHref={news.href}
       structuredData={createNewsStructuredData(news)}

@@ -1,6 +1,7 @@
 export const INDEXABLE_ROUTES = [
   "/",
   "/about",
+  "/news",
   "/professor",
   "/researchers",
   "/publications",

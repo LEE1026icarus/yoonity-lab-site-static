@@ -148,6 +148,11 @@ export const PAGE_METADATA = {
     "연구실 소개·연구원 모집·산학협력",
     "Yoonity Lab의 연구 방향, 대학원생·학부연구생 모집, 기업·기관 산학협력, 연구실 자료와 소식을 확인하세요.",
   ),
+  "/news": createPageMetadata(
+    "/news",
+    "연구실 소식",
+    "Yoonity Lab의 연구, 교육, 산학협력과 수상 소식을 날짜순으로 확인하세요.",
+  ),
   "/professor": createPageMetadata(
     "/professor",
     "윤상혁 교수 · 동국대학교 경영정보학과",

@@ -95,6 +95,7 @@ test("sitemap emits each indexable route exactly once on the canonical origin", 
     [
       "https://lab.example.edu/",
       "https://lab.example.edu/about",
+      "https://lab.example.edu/news",
       "https://lab.example.edu/professor",
       "https://lab.example.edu/researchers",
       "https://lab.example.edu/publications",
