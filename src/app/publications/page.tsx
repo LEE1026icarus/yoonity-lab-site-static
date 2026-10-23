@@ -17,28 +17,28 @@ const RESEARCH_TOPICS = [
     count: 28,
     description: "생성형 AI, 정보 검색, 텍스트 분석과 예측 모델의 활용을 연구합니다.",
     exampleTitle: "Evaluating user performance on RAG-based generative AI tools",
-    exampleLabel: "RAG 기반 생성형 AI 도구 이용 성과",
+    exampleLabel: "Evaluating user performance on RAG-based generative AI tools: A scenario-based experiment on AI-assisted information retrieval",
   },
   {
     label: "광고·미디어",
     count: 17,
     description: "영상 광고와 미디어 이용 맥락이 시청자 반응에 미치는 영향을 살펴봅니다.",
     exampleTitle: "Effect of Media Context on Avoidance of Skippable Pre-roll Ads",
-    exampleLabel: "온라인 영상 광고 회피와 미디어 맥락",
+    exampleLabel: "Effect of Media Context on Avoidance of Skippable Pre-roll Ads in Online Video Platform: A Mental Accounting of Time Perspective",
   },
   {
     label: "금융·핀테크",
     count: 10,
     description: "디지털 금융 서비스의 채택과 저항, 이용자 행동을 분석합니다.",
     exampleTitle: "Evolving dynamics of resistance and adoption in digital finance",
-    exampleLabel: "디지털 금융 앱 채택과 저항",
+    exampleLabel: "Evolving dynamics of resistance and adoption in digital finance: A user review analysis of FinTech and traditional banking applications",
   },
   {
     label: "교육·학습",
     count: 7,
     description: "교육용 챗봇과 AI 학습 도구의 설계 및 학습 경험을 연구합니다.",
     exampleTitle: "Designing educational chatbots in resource-constrained environments",
-    exampleLabel: "교육용 챗봇 설계",
+    exampleLabel: "Designing educational chatbots in resource-constrained environments: A design science approach",
   },
   {
     label: "헬스케어",
@@ -52,14 +52,14 @@ const RESEARCH_TOPICS = [
     count: 7,
     description: "공공가치와 사회문제를 중심으로 디지털 정책의 방향을 연구합니다.",
     exampleTitle: "A conceptual digital policy framework via mixed-methods approach",
-    exampleLabel: "공공가치 중심 디지털 정책",
+    exampleLabel: "A conceptual digital policy framework via mixed-methods approach: Navigating public value for value-driven digital transformation",
   },
   {
     label: "콘텐츠·문화",
     count: 14,
     description: "한류와 문화 브랜딩 등 콘텐츠의 확산과 가치를 분석합니다.",
     exampleTitle: "Unravelling the key topics of Hallyu",
-    exampleLabel: "한류의 문화 브랜딩",
+    exampleLabel: "Unravelling the key topics of Hallyu: a cultural branding perspective from South Korea",
   },
   {
     label: "서비스·소비자",
@@ -114,7 +114,7 @@ export default async function PublicationsPage() {
                     {examplePublication && (
                       <Link
                         href={`/publications/${examplePublication.id}`}
-                        className="mt-4 inline-block text-[16px] font-semibold underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
+                        className="mt-4 inline-block text-[16px] font-semibold leading-relaxed underline decoration-hairline underline-offset-4 transition-colors hover:text-axis-ai hover:decoration-axis-ai"
                       >
                         대표 논문: {topic.exampleLabel} →
                       </Link>
