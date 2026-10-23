@@ -166,7 +166,7 @@ export const PAGE_METADATA = {
   "/publications": createPageMetadata(
     "/publications",
     "논문·도서·특허",
-    "Yoonity Lab의 해외·국내 논문, 도서, 특허와 연구성과를 확인하세요.",
+    "Yoonity Lab의 AI·데이터 분석, 광고·미디어, 금융·핀테크 등 연구 주제별 해외·국내 논문, 도서·특허 연구성과를 확인하세요.",
   ),
   "/activities": createPageMetadata(
     "/activities",
